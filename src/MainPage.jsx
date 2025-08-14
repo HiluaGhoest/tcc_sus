@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo_icon from './assets/logo_icon.png';
 import medico1 from './assets/medico1.jpg';
 import medico2 from './assets/medico2.jpg';
@@ -14,6 +15,7 @@ function MainPage({ onLogout }) {
   // Seleciona uma imagem aleatória de medico1 a medico5
   const medicoImages = [medico1, medico2, medico3, medico4, medico5];
   const randomMedico = medicoImages[Math.floor(Math.random() * medicoImages.length)];
+  const navigate = useNavigate();
 
   return (
     <div style={{
@@ -110,7 +112,7 @@ function MainPage({ onLogout }) {
               marginTop: '-40px', // metade da altura do botão para alinhar centro ao topo
               transition: 'transform 0.2s cubic-bezier(.4,2,.3,1)',
               cursor: 'pointer',
-            }}>
+            }} onClick={() => navigate('/consultas')}>
               <img src={consultasIcon} alt="Consultas" style={{ width: 48, height: 48, objectFit: 'contain' }} />
               <span style={{ marginTop: 12, fontSize: 20 }}>Consultas</span>
             </div>
@@ -128,7 +130,7 @@ function MainPage({ onLogout }) {
               marginTop: '-40px', // metade da altura do botão para alinhar centro ao topo
               transition: 'transform 0.2s cubic-bezier(.4,2,.3,1)',
               cursor: 'pointer',
-            }}>
+            }} onClick={() => navigate('/exames')}>
               <img src={examesIcon} alt="Exames" style={{ width: 48, height: 48, objectFit: 'contain' }} />
               <span style={{ marginTop: 12, fontSize: 20 }}>Exames</span>
             </div>
