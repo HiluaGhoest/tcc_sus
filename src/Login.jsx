@@ -8,7 +8,7 @@ import medico3 from './assets/medico3.jpg';
 import medico4 from './assets/medico4.jpg';
 import medico5 from './assets/medico5.jpg';
 
-function Login({ onRegisterClick }) {
+function Login({ onRegisterClick, onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +34,11 @@ function Login({ onRegisterClick }) {
       const data = await res.json();
       if (res.ok) {
         setSuccess(data.message);
-        navigate('/'); // Redireciona para a página principal
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        } else {
+          navigate('/');
+        }
       } else {
         setError(data.error || 'Erro ao fazer login.');
       }

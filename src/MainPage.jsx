@@ -44,17 +44,41 @@ function MainPage({ onLogout }) {
           <img src={logo_icon} alt="SISVida" style={{ height: 40, width: 120, objectFit: 'contain', marginRight: -16 }} />
           <span style={{ fontWeight: 700, fontSize: 22, color: '#3078af' }}>SISVida</span>
         </div>
-        <div style={{
-          width: 40,
-          height: 40,
-          borderRadius: '50%',
-          background: '#e3f2fd',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}>
-          <img src={accountIcon} alt="Avatar" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            background: '#e3f2fd',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}>
+            <img src={accountIcon} alt="Avatar" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+          </div>
+          <button
+            style={{
+              background: '#3078af',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              padding: '0.5rem 1rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: 16,
+              marginLeft: 8,
+            }}
+            onClick={() => {
+              if (onLogout) {
+                onLogout();
+              } else {
+                navigate('/login');
+              }
+            }}
+          >
+            Sair
+          </button>
         </div>
       </header>
       {/* Conteúdo principal */}
