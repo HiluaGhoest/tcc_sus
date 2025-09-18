@@ -21,17 +21,13 @@ const Exames = () => {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      height: '100vh',
       width: '100%',
       background: 'linear-gradient(135deg, #e3f0fa 0%, #f7fbff 100%)',
       fontFamily: 'sans-serif',
       margin: 0,
       padding: 0,
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems: 'stretch',
+      boxSizing: 'border-box'
     }}>
       {/* Header */}
       <header style={{
