@@ -110,7 +110,7 @@ export default function LandingPage() {
       {/* Right side - Parallax Image */}
       <div className="w-[65%] relative overflow-hidden h-screen">
         <div className="absolute inset-0 w-full h-full scale-110">
-          <ParallaxImage src="src/assets/images/landing_page.jpg" alt="Landing Illustration" />
+          <ParallaxImage src="images/landing_page.jpg" alt="Landing Illustration" />
         </div>
       </div>
 
