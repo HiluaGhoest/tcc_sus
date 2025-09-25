@@ -43,17 +43,17 @@ export default function Login() {
 
       const { data: profileData, error: profileError } = await supabase
     .from("profiles")
-    .select("role")
+    .select("client_type")
     .eq("id", user.id)
     .single();
 
     if (profileError) {
-      console.error("Erro ao buscar role:", profileError);
+      console.error("Erro ao buscar client type:", profileError);
     }
 
     if (profileData) {
-      console.log("Usuário logado como:", profileData.role);
-      localStorage.setItem("client_type", profileData.role);
+      console.log("Usuário logado como:", profileData.client_type);
+      localStorage.setItem("client_type", profileData.client_type);
     }
 
 

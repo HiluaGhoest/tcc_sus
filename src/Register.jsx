@@ -88,7 +88,7 @@ export default function Register({ onRegisterSuccess }) {
     age: "",
     phone: "",
     email: "",
-    role: "paciente",
+    client_type: "paciente",
     country: { code: "+55", flag: "🇧🇷" }
 
   });
@@ -235,7 +235,7 @@ export default function Register({ onRegisterSuccess }) {
         age: parseInt(form.age),
         phone: form.phone,
         email: emailToUse,
-        role: form.role,
+        client_type: form.client_type,
       },
     ]);
 
@@ -430,7 +430,7 @@ export default function Register({ onRegisterSuccess }) {
                   }
                 }}
                 tabIndex={0}
-                role="button"
+                client_type="button"
                 aria-label="Abrir seleção de país"
               >
                 <select
@@ -516,8 +516,8 @@ export default function Register({ onRegisterSuccess }) {
 
           <div className="relative">
           <select
-            name="role"
-            value={form.role}
+            name="client_type"
+            value={form.client_type}
             onChange={handleChange}
             className="peer w-full px-4 pt-5 pb-2 border border-gray-400 rounded-md 
               focus:ring-2 focus:ring-indigo-500 bg-white outline-none cursor-pointer appearance-none"
@@ -526,7 +526,7 @@ export default function Register({ onRegisterSuccess }) {
             <option value="medico">Médico</option>
           </select>
           <label
-            htmlFor="role"
+            htmlFor="client_type"
             className="absolute left-3 top-[-10px] text-sm text-indigo-600 bg-white px-1"
           >
             Registrar como
