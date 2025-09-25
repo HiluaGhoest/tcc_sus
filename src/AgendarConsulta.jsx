@@ -163,7 +163,7 @@ export default function AgendarConsulta() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('workplace', unidadeSelecionada.nome);
+        .eq('workplace', unidadeSelecionada.cnes);
       if (error) {
         console.error('[DEBUG] Erro ao buscar médicos:', error);
         setMedicos([]);
