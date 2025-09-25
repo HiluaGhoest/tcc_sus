@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+
 // Lista de países com bandeira e código
 const countries = [
   { code: "+55", flag: "🇧🇷", name: "Brasil" },
@@ -74,7 +75,7 @@ function maskPhoneIntl(value) {
 }
 import { supabase } from "./supabaseClient";
 
-export default function Register() {
+export default function Register({ onRegisterSuccess }) {
   const countrySelectRef = useRef(null);
   const genderIdentityRef = useRef(null);
   const genderBiologicalRef = useRef(null);
@@ -258,6 +259,10 @@ export default function Register() {
 
     // O redirecionamento será feito automaticamente pelo estado de autenticação no App.jsx
     setSuccess(true);
+
+    if (onRegisterSuccess) {
+    onRegisterSuccess();
+    }
   };
 
   return (

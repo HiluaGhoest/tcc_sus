@@ -56,6 +56,7 @@ function generateBlurSpots(count, radius) {
 
 export default function LandingPage() {
   const [view, setView] = useState(null);
+  const [popupMessage, setPopupMessage] = useState(null);
   // Gerar blur spots uma vez ao montar
   const [blurSpots, setBlurSpots] = useState("");
   useEffect(() => {
@@ -125,10 +126,23 @@ export default function LandingPage() {
               <span className="text-white text-xl font-bold">✕</span>
             </button>
             {view === "login" && <Login />}
-            {view === "register" && <Register />}
+            {view === "register" && (
+              <Register onRegisterSuccess={() => {
+                setPopupMessage("Cadastro realizado com sucesso! Verifique seu email para confirmação.");
+                setView(null); // fecha o modal
+                setTimeout(() => setPopupMessage(null), 4000); // apaga em 3s
+            }} />
+            )}
           </div>
         </div>
       )}
+      {popupMessage && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg animate-fadeInScale">
+              {popupMessage}
+            </div>
+          </div>
+  )}
 
       <style jsx>{`
         /* Rotating circular gradient */
