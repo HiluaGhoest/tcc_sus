@@ -86,6 +86,7 @@ export default function AgendarConsulta() {
             endereco: `${u.tipo_logradouro || ''} ${u.logradouro || ''}, ${u.numero_estabelecimento || ''} - ${u.bairro_estabelecimento || ''}`,
             lat: parseFloat(u.latitude_estabelecimento_decimo_grau),
             lng: parseFloat(u.longitude_estabelecimento_decimo_grau),
+            cnes: u.cnes
           })).filter(u => !isNaN(u.lat) && !isNaN(u.lng));
           setUnidades(unidadesApi);
           console.log('[Proxy CNES] Unidades recebidas:', unidadesApi);
