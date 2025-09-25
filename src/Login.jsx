@@ -14,7 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [country, setCountry] = useState({ code: "+55", flag: "🇧🇷" });
   const [phone, setPhone] = useState("");
-
+  const [userType, setUserType] = useState("paciente");
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -39,6 +39,8 @@ export default function Login() {
       return;
     }
 
+    const user = loginData.user;
+
       const { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .select("role")
@@ -51,7 +53,7 @@ export default function Login() {
 
     if (profileData) {
       console.log("Usuário logado como:", profileData.role);
-      localStorage.setItem("userType", profileData.role);
+      localStorage.setItem("client_type", profileData.role);
     }
 
 
@@ -103,6 +105,25 @@ export default function Login() {
             peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600`}
         >
           Senha
+        </label>
+      </div>
+
+      <div className="relative">
+        <select
+          name="userType"
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+          className="peer w-full px-4 pt-5 pb-2 border border-gray-400 rounded-md 
+              focus:ring-2 focus:ring-indigo-500 bg-white outline-none cursor-pointer appearance-none"
+        >
+          <option value="paciente">Paciente</option>
+          <option value="medico">Médico</option>
+        </select>
+        <label
+          htmlFor="userType"
+          className="absolute left-3 top-[-10px] text-sm text-indigo-600 bg-white px-1"
+        >
+          Entrar como
         </label>
       </div>
 
