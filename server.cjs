@@ -70,7 +70,7 @@ app.get('/api/unidades', async (req, res) => {
   console.log('Received request for /api/unidades'); // Debug log
   const uf = req.query.uf || '35';  // Default para São Paulo
   const municipio = req.query.municipio || 352440; // Permite busca por município se fornecido
-  let url = `https://apidadosabertos.saude.gov.br/cnes/estabelecimentos?codigo_uf=${uf}&status=1&limit=20&offset=0&codigo_municipio=${municipio || ''}`;
+  let url = `https://apidadosabertos.saude.gov.br/cnes/estabelecimentos?codigo_uf=${uf}&status=1&limit=100&offset=0&codigo_municipio=${municipio || ''}`;
 
   
   let allData = [];  // Store all paginated data

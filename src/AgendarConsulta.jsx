@@ -9,6 +9,7 @@ const horarios = [
 ];
 
 export default function AgendarConsulta() {
+  const [searchUnidade, setSearchUnidade] = useState("");
   // Estado para unidades dinâmicas
   const [unidades, setUnidades] = useState([]);
   const [unidadesOrdenadas, setUnidadesOrdenadas] = useState([]);
@@ -83,7 +84,6 @@ export default function AgendarConsulta() {
             endereco: `${u.tipo_logradouro || ''} ${u.logradouro || ''}, ${u.numero_estabelecimento || ''} - ${u.bairro_estabelecimento || ''}`,
             lat: parseFloat(u.latitude_estabelecimento_decimo_grau),
             lng: parseFloat(u.longitude_estabelecimento_decimo_grau),
-            nota: 5.0,
           })).filter(u => !isNaN(u.lat) && !isNaN(u.lng));
           setUnidades(unidadesApi);
           console.log('[Proxy CNES] Unidades recebidas:', unidadesApi);
@@ -340,37 +340,45 @@ export default function AgendarConsulta() {
                 <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   <span className="text-blue-600">📍</span> <span>Escolha a Unidade</span>
                 </h3>
-                <div className="flex flex-col gap-3 mb-6">
-                  {unidadesOrdenadas.map((u, idx) => (
-                    <label key={u.nome} className={`border rounded-xl p-4 flex flex-col cursor-pointer transition-all ${unidadeSelecionada && unidadeSelecionada.nome === u.nome ? "border-blue-600 bg-blue-50 shadow" : "border-gray-200 bg-white"}`}>
-                      <input
-                        type="radio"
-                        name="unidade"
-                        className="hidden"
-                        checked={unidadeSelecionada && unidadeSelecionada.nome === u.nome}
-                        onChange={() => setUnidadeSelecionada(u)}
-                      />
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-gray-800">{u.nome}</span>
-                        {unidadeSelecionada && unidadeSelecionada.nome === u.nome && (
-                          <span className="ml-2 text-blue-600 text-lg">●</span>
+                <input
+                  type="text"
+                  className="mb-3 p-2 border rounded-lg w-full bg-gray-100 text-gray-700"
+                  placeholder="Buscar unidade..."
+                  value={searchUnidade}
+                  onChange={e => setSearchUnidade(e.target.value)}
+                />
+                <div className="flex flex-col gap-3 mb-6 max-h-72 overflow-y-auto">
+                  {unidadesOrdenadas
+                    .filter(u => u.nome.toLowerCase().includes(searchUnidade.toLowerCase()))
+                    .map((u, idx) => (
+                      <label key={u.nome} className={`border rounded-xl p-4 flex flex-col cursor-pointer transition-all ${unidadeSelecionada && unidadeSelecionada.nome === u.nome ? "border-blue-600 bg-blue-50 shadow" : "border-gray-200 bg-white"}`}>
+                        <input
+                          type="radio"
+                          name="unidade"
+                          className="hidden"
+                          checked={unidadeSelecionada && unidadeSelecionada.nome === u.nome}
+                          onChange={() => setUnidadeSelecionada(u)}
+                        />
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-800">{u.nome}</span>
+                          {unidadeSelecionada && unidadeSelecionada.nome === u.nome && (
+                            <span className="ml-2 text-blue-600 text-lg">●</span>
+                          )}
+                        </div>
+                        <span className="text-gray-500 text-sm mt-1">{u.endereco}</span>
+                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                          <span>{userLocation && u.distanciaCalc ? `${u.distanciaCalc.toFixed(2)} km` : "-"}</span>
+                        </div>
+                        {unidadeSelecionada && unidadeSelecionada.nome === u.nome && !isNaN(u.lat) && !isNaN(u.lng) && (
+                          <button
+                            className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${u.lat},${u.lng}`, '_blank')}
+                          >
+                            Ver no mapa
+                          </button>
                         )}
-                      </div>
-                      <span className="text-gray-500 text-sm mt-1">{u.endereco}</span>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                        <span>🚗 {userLocation && u.distanciaCalc ? `${u.distanciaCalc.toFixed(2)} km` : "-"}</span>
-                        <span>⭐ {u.nota}</span>
-                      </div>
-                      {unidadeSelecionada && unidadeSelecionada.nome === u.nome && !isNaN(u.lat) && !isNaN(u.lng) && (
-                        <button
-                          className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${u.lat},${u.lng}`, '_blank')}
-                        >
-                          Ver no mapa
-                        </button>
-                      )}
-                    </label>
-                  ))}
+                      </label>
+                    ))}
                 </div>
               </div>
             </div>
