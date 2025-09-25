@@ -39,6 +39,22 @@ export default function Login() {
       return;
     }
 
+      const { data: profileData, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+    if (profileError) {
+      console.error("Erro ao buscar role:", profileError);
+    }
+
+    if (profileData) {
+      console.log("Usuário logado como:", profileData.role);
+      localStorage.setItem("userType", profileData.role);
+    }
+
+
     // O redirecionamento será feito automaticamente pelo estado de autenticação no App.jsx
   };
 

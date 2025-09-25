@@ -88,7 +88,9 @@ export default function Register({ onRegisterSuccess }) {
     age: "",
     phone: "",
     email: "",
+    role: "paciente",
     country: { code: "+55", flag: "🇧🇷" }
+
   });
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -233,6 +235,7 @@ export default function Register({ onRegisterSuccess }) {
         age: parseInt(form.age),
         phone: form.phone,
         email: emailToUse,
+        role: form.role,
       },
     ]);
 
@@ -510,6 +513,26 @@ export default function Register({ onRegisterSuccess }) {
               Email
             </label>
           </div>
+
+          <div className="relative">
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="peer w-full px-4 pt-5 pb-2 border border-gray-400 rounded-md 
+              focus:ring-2 focus:ring-indigo-500 bg-white outline-none cursor-pointer appearance-none"
+          >
+            <option value="paciente">Paciente</option>
+            <option value="medico">Médico</option>
+          </select>
+          <label
+            htmlFor="role"
+            className="absolute left-3 top-[-10px] text-sm text-indigo-600 bg-white px-1"
+          >
+            Registrar como
+          </label>
+        </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition"
