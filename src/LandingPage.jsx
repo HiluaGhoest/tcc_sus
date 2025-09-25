@@ -83,7 +83,7 @@ export default function LandingPage() {
 
         <h1 className="text-5xl font-bold text-white z-10">SisVida</h1>
         <p className="text-lg text-blue-100 text-center z-10">
-          Agende, Consulte e Gerencie sua Saúde com Facilidade.
+          Agende, Consulte e Gerencie sua Saúde com Facilidade
         </p>
 
         <div className="flex space-x-4 z-10">
