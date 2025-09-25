@@ -25,25 +25,18 @@ export default function AgendarConsulta() {
     return R * c;
   }
 
+  // Obtém localização do usuário salva no localStorage
   const [userLocation, setUserLocation] = useState(null);
-  // Removido: declaração duplicada de unidadesOrdenadas
-
-  // Captura localização do usuário ao montar
   React.useEffect(() => {
-    console.log("[Geolocalização] Tentando capturar localização do usuário...");
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          console.log("[Geolocalização] Localização capturada:", pos.coords);
-          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        },
-        (err) => {
-          console.warn("[Geolocalização] Falha ao capturar localização:", err);
-          setUserLocation(null); // Falha ou negado
-        }
-      );
+    const loc = localStorage.getItem('userLocation');
+    if (loc) {
+      try {
+        setUserLocation(JSON.parse(loc));
+      } catch {
+        setUserLocation(null);
+      }
     } else {
-      console.warn("[Geolocalização] API não disponível no navegador.");
+      setUserLocation(null);
     }
   }, []);
 
