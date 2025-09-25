@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "./supabaseClient";
 
 // Unidades agora serão buscadas da API CNES
 
-const horarios = [
+// Horários padrão, mas agora serão filtrados pela agenda do médico
+const horariosPadrao = [
   "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
   "11:00", "11:30", "14:00", "14:30", "15:00", "15:30"
 ];
@@ -143,9 +145,54 @@ export default function AgendarConsulta() {
   const [dataSelecionada, setDataSelecionada] = useState(dataInicial);
   const [mesAtual, setMesAtual] = useState(dataInicial.getMonth());
   const [anoAtual, setAnoAtual] = useState(dataInicial.getFullYear());
-  const [horarioSelecionado, setHorarioSelecionado] = useState("10:00");
+  const [horarioSelecionado, setHorarioSelecionado] = useState("");
   const [unidadeSelecionada, setUnidadeSelecionada] = useState(unidades[1]);
+
+  // Debug: log unidade selecionada
+  useEffect(() => {
+    console.log('[DEBUG] Unidade selecionada:', unidadeSelecionada);
+    // Buscar médicos da unidade selecionada
+    async function fetchMedicos() {
+      if (!unidadeSelecionada || !unidadeSelecionada.nome) {
+        setMedicos([]);
+        return;
+      }
+      console.log('[DEBUG] Buscando médicos para unidade:', unidadeSelecionada.nome);
+      // Supondo que o campo workplace do médico seja igual ao nome da unidade
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('workplace', unidadeSelecionada.nome);
+      if (error) {
+        console.error('[DEBUG] Erro ao buscar médicos:', error);
+        setMedicos([]);
+      } else {
+        console.log('[DEBUG] Médicos encontrados:', data);
+        setMedicos(data || []);
+      }
+    }
+    fetchMedicos();
+  }, [unidadeSelecionada]);
   const [tipoConsultaSelecionado, setTipoConsultaSelecionado] = useState(tiposConsulta[0]);
+  const [medicos, setMedicos] = useState([]);
+  const [medicoSelecionado, setMedicoSelecionado] = useState(null);
+
+  // Debug: log médicos buscados/renderizados
+  useEffect(() => {
+    console.log('[DEBUG] Médicos carregados:', medicos);
+  }, [medicos]);
+
+  // Debug: log médico selecionado
+  useEffect(() => {
+    console.log('[DEBUG] Médico selecionado:', medicoSelecionado);
+  }, [medicoSelecionado]);
+  const [generoFiltro, setGeneroFiltro] = useState("");
+  const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
+
+  // Debug: log horários disponíveis
+  useEffect(() => {
+    console.log('[DEBUG] Horários disponíveis:', horariosDisponiveis);
+  }, [horariosDisponiveis]);
   const navigate = useNavigate();
 
   // Calcula o primeiro dia da semana do mês atual
@@ -170,155 +217,87 @@ export default function AgendarConsulta() {
       <main className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-2 mt-8">Agendar Consulta</h2>
-          <p className="text-gray-500 text-center mb-8">Escolha a data, horário e unidade para seu atendimento</p>
+          <p className="text-gray-500 text-center mb-8">Escolha a data, médico e unidade para seu atendimento</p>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Bloco da esquerda: Data e Horários */}
+              {/* Bloco da esquerda: Data e Médico */}
               <div>
                 {/* Data */}
                 <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   <span className="text-blue-600">📅</span> <span>Escolha a Data</span>
                 </h3>
                 <div className="flex items-center justify-between mb-2">
-                  <button
-                    className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded"
-                    onClick={() => {
-                      let novoMes = mesAtual;
-                      let novoAno = anoAtual;
-                      if (mesAtual === 0) {
-                        novoMes = 11;
-                        novoAno = anoAtual - 1;
-                      } else {
-                        novoMes = mesAtual - 1;
-                      }
-                      setMesAtual(novoMes);
-                      setAnoAtual(novoAno);
-                      // Verifica se o dia selecionado existe no novo mês
-                      const diasNoNovoMes = new Date(novoAno, novoMes + 1, 0).getDate();
-                      if (diaSelecionado > diasNoNovoMes) {
-                        // Seleciona o primeiro dia válido do novo mês
-                        for (let i = 1; i <= diasNoNovoMes; i++) {
-                          const d = new Date(novoAno, novoMes, i);
-                          if (d.getDay() !== 0 && d.getDay() !== 6) {
-                            setDiaSelecionado(i);
-                            break;
-                          }
-                        }
-                      }
-                    }}
-                  >
-                    &#8592;
-                  </button>
-                  <span className="font-semibold text-gray-700">{meses[mesAtual]} {anoAtual}</span>
-                  <button
-                    className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded"
-                    onClick={() => {
-                      let novoMes = mesAtual;
-                      let novoAno = anoAtual;
-                      if (mesAtual === 11) {
-                        novoMes = 0;
-                        novoAno = anoAtual + 1;
-                      } else {
-                        novoMes = mesAtual + 1;
-                      }
-                      setMesAtual(novoMes);
-                      setAnoAtual(novoAno);
-                      // Verifica se o dia selecionado existe no novo mês
-                      const diasNoNovoMes = new Date(novoAno, novoMes + 1, 0).getDate();
-                      if (diaSelecionado > diasNoNovoMes) {
-                        // Seleciona o primeiro dia válido do novo mês
-                        for (let i = 1; i <= diasNoNovoMes; i++) {
-                          const d = new Date(novoAno, novoMes, i);
-                          if (d.getDay() !== 0 && d.getDay() !== 6) {
-                            setDiaSelecionado(i);
-                            break;
-                          }
-                        }
-                      }
-                    }}
-                  >
-                    &#8594;
-                  </button>
+                  {/* ...botões de navegação de mês... */}
+                  {/* ...existing code... */}
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-center mb-2 text-gray-500 text-xs">
                   <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-center mb-6">
-                  {/* Preenche os dias vazios antes do primeiro dia do mês */}
-                  {[...Array(primeiroDiaSemana)].map((_, i) => (
-                    <span key={"empty" + i}></span>
-                  ))}
-                  {/* Dias do mês */}
-                  {[...Array(diasNoMes)].map((_, i) => {
-                    const dia = i + 1;
-                    const dataAtual = new Date(anoAtual, mesAtual, dia);
-                    const isPast =
-                      anoAtual < today.getFullYear() ||
-                      (anoAtual === today.getFullYear() && mesAtual < today.getMonth()) ||
-                      (anoAtual === today.getFullYear() && mesAtual === today.getMonth() && dia < today.getDate());
-                    const isCurrentDay = anoAtual === today.getFullYear() && mesAtual === today.getMonth() && dia === today.getDate();
-                    // Conta apenas dias úteis para o intervalo de uma semana
-                    let weekdayCount = 0;
-                    let isWithinWeek = false;
-                    if (
-                      anoAtual === today.getFullYear() &&
-                      mesAtual === today.getMonth() &&
-                      dia > today.getDate()
-                    ) {
-                      for (let d = today.getDate() + 1; d <= dia; d++) {
-                        const tempDate = new Date(today.getFullYear(), today.getMonth(), d);
-                        if (tempDate.getDay() !== 0 && tempDate.getDay() !== 6) {
-                          weekdayCount++;
-                        }
-                      }
-                      if (weekdayCount > 0 && weekdayCount <= 7) {
-                        isWithinWeek = true;
-                      }
-                    }
-                    const isWeekend = dataAtual.getDay() === 0 || dataAtual.getDay() === 6;
-                    const disabled = isPast || isWithinWeek || isWeekend || isCurrentDay;
-                    // Só destaca se o dia/mês/ano forem exatamente iguais ao da dataSelecionada
-                    const isSelected =
-                      dataSelecionada.getDate() === dia &&
-                      dataSelecionada.getMonth() === mesAtual &&
-                      dataSelecionada.getFullYear() === anoAtual;
-                    let btnClass = "py-1 px-2 rounded transition-all font-medium text-sm border ";
-                    if (isSelected) {
-                      btnClass += "bg-blue-600 text-white border-blue-600 ";
-                    } else if (disabled) {
-                      btnClass += "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed ";
-                    } else {
-                      btnClass += "bg-white hover:bg-blue-50 border-gray-200 ";
-                    }
-                    return (
-                      <button
-                        key={dia}
-                        className={btnClass}
-                        onClick={() => {
-                          if (!disabled) setDataSelecionada(new Date(anoAtual, mesAtual, dia));
-                        }}
-                        disabled={disabled}
-                      >
-                        {dia}
-                      </button>
-                    );
-                  })}
+                  {/* ...dias do mês... */}
+                  {/* ...existing code... */}
                 </div>
-                {/* Horários */}
+                {/* Médico */}
                 <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  <span className="text-blue-600">⏰</span> <span>Escolha o Horário</span>
+                  <span className="text-blue-600">👨‍⚕️</span> <span>Escolha o Médico</span>
                 </h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {horarios.map(h => (
-                    <button
-                      key={h}
-                      className={`py-2 rounded-lg font-medium text-sm border transition-all ${horarioSelecionado === h ? "bg-blue-600 text-white border-blue-600" : "bg-gray-100 hover:bg-blue-50 border-gray-200"}`}
-                      onClick={() => setHorarioSelecionado(h)}
-                    >
-                      {h}
-                    </button>
-                  ))}
+                <div className="mb-2">
+                  <label className="mr-2 text-gray-600 font-medium">Filtrar por gênero:</label>
+                  <select
+                    className="p-1 border rounded bg-gray-100 text-gray-700"
+                    value={generoFiltro}
+                    onChange={e => setGeneroFiltro(e.target.value)}
+                  >
+                    <option value="">Todos</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                  </select>
                 </div>
+                <div className="flex flex-col gap-2 mb-6 max-h-72 overflow-y-auto">
+                  {medicos
+                    .filter(m => !generoFiltro || m.genero === generoFiltro)
+                    .map(m => (
+                      <label key={m.id} className={`border rounded-xl p-3 flex flex-col cursor-pointer transition-all ${medicoSelecionado && medicoSelecionado.id === m.id ? "border-blue-600 bg-blue-50 shadow" : "border-gray-200 bg-white"}`}>
+                        <input
+                          type="radio"
+                          name="medico"
+                          className="hidden"
+                          checked={medicoSelecionado && medicoSelecionado.id === m.id}
+                          onChange={() => {
+                            console.log('[DEBUG] Selecionando médico:', m);
+                            setMedicoSelecionado(m);
+                          }}
+                        />
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-800">{m.nome || "(Sem nome)"}</span>
+                          <span className="text-gray-500 text-xs">{m.especialidade || ""}</span>
+                          {medicoSelecionado && medicoSelecionado.id === m.id && (
+                            <span className="ml-2 text-blue-600 text-lg">●</span>
+                          )}
+                        </div>
+                        <span className="text-gray-500 text-sm mt-1">Gênero: {m.genero || ""}</span>
+                      </label>
+                    ))}
+                </div>
+                {/* Horários disponíveis do médico */}
+                {medicoSelecionado && (
+                  <>
+                    <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                      <span className="text-blue-600">⏰</span> <span>Escolha o Horário</span>
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      {horariosDisponiveis.length > 0 ? horariosDisponiveis.map(h => (
+                        <button
+                          key={h}
+                          className={`py-2 rounded-lg font-medium text-sm border transition-all ${horarioSelecionado === h ? "bg-blue-600 text-white border-blue-600" : "bg-gray-100 hover:bg-blue-50 border-gray-200"}`}
+                          onClick={() => setHorarioSelecionado(h)}
+                        >
+                          {h}
+                        </button>
+                      )) : <span className="text-gray-400">Nenhum horário disponível para este dia.</span>}
+                    </div>
+                  </>
+                )}
               </div>
               {/* Bloco da direita: Unidades e Tipo de Consulta */}
               
@@ -367,7 +346,7 @@ export default function AgendarConsulta() {
                         </div>
                         <span className="text-gray-500 text-sm mt-1">{u.endereco}</span>
                         <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                          <span>{userLocation && u.distanciaCalc ? `${u.distanciaCalc.toFixed(2)} km` : "-"}</span>
+                          <span> {userLocation && u.distanciaCalc ? `${u.distanciaCalc.toFixed(2)} km` : "-"}</span>
                         </div>
                         {unidadeSelecionada && unidadeSelecionada.nome === u.nome && !isNaN(u.lat) && !isNaN(u.lng) && (
                           <button
