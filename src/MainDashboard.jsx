@@ -9,6 +9,23 @@ export default function MainDashboard() {
   const [clienteData, setClienteData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Captura localização do usuário ao montar e salva no localStorage
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          localStorage.setItem('userLocation', JSON.stringify(coords));
+        },
+        (err) => {
+          localStorage.removeItem('userLocation');
+        }
+      );
+    } else {
+      localStorage.removeItem('userLocation');
+    }
+  }, []);
+
   useEffect(() => {
     const getProfileAndCliente = async () => {
       const { data: { user } } = await supabase.auth.getUser();
