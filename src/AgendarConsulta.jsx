@@ -159,11 +159,10 @@ export default function AgendarConsulta() {
         return;
       }
       console.log('[DEBUG] Buscando médicos para unidade:', unidadeSelecionada.nome);
-      // Supondo que o campo workplace do médico seja igual ao nome da unidade
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('workplace', unidadeSelecionada.cnes);
+        .eq('unit_cnes', unidadeSelecionada.cnes);
       if (error) {
         console.error('[DEBUG] Erro ao buscar médicos:', error);
         setMedicos([]);
