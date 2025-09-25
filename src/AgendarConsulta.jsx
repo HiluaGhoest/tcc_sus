@@ -160,7 +160,7 @@ export default function AgendarConsulta() {
       }
       console.log('[DEBUG] Buscando médicos para unidade:', unidadeSelecionada.nome);
       const { data, error } = await supabase
-        .from('profiles')
+        .from('logistica_medico')
         .select('*')
         .eq('unit_cnes', unidadeSelecionada.cnes);
       if (error) {
