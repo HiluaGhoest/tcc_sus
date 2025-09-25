@@ -19,12 +19,7 @@ export default async function handler(req, res) {
       if (data.estabelecimentos.length === 0) {
         hasMore = false;
       } else {
-          // Adiciona o campo 'cnes' explicitamente em cada estabelecimento
-          const estabelecimentosComCnes = data.estabelecimentos.map(e => ({
-            ...e,
-            cnes: e.cnes || e.codigo_cnes || null
-          }));
-          allData = allData.concat(estabelecimentosComCnes);
+        allData = allData.concat(data.estabelecimentos);
         offset += 20;
       }
 
@@ -32,7 +27,7 @@ export default async function handler(req, res) {
       hasMore = offset < totalResults;
     }
 
-      res.json({ estabelecimentos: allData });
+    res.json({ estabelecimentos: allData });
   } catch (err) {
     res.status(500).json({ error: "Erro ao buscar unidades do DataSUS", details: err.message });
   }
