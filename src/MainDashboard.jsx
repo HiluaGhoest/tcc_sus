@@ -3,6 +3,44 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
 export default function MainDashboard() {
+  // Função para cancelar consulta
+  const handleCancelConsulta = async (consulta, idx) => {
+    if (!clienteData || !profile) return;
+    if (!window.confirm('Tem certeza que deseja cancelar esta consulta?')) return;
+
+    try {
+      // Remove do usuário
+      const novasConsultas = clienteData.consultas_marcadas.filter((_, i) => i !== idx);
+      await supabase
+        .from('logistica_cliente')
+        .update({ consultas_marcadas: novasConsultas })
+        .eq('cliente_cpf', profile.cpf);
+
+      // Remove do médico
+      if (consulta.medico_id) {
+        // Buscar dados do médico
+        const { data: medicoData, error: medicoError } = await supabase
+          .from('logistica_medico')
+          .select('consultas_marcadas')
+          .eq('medico_id', consulta.medico_id)
+          .single();
+        if (!medicoError && medicoData && Array.isArray(medicoData.consultas_marcadas)) {
+          const novasConsultasMedico = medicoData.consultas_marcadas.filter(
+            c => !(c.data === consulta.data && c.horario === consulta.horario && c.unidade === consulta.unidade && c.cliente_cpf === profile.cpf)
+          );
+          await supabase
+            .from('logistica_medico')
+            .update({ consultas_marcadas: novasConsultasMedico })
+            .eq('medico_id', consulta.medico_id);
+        }
+      }
+
+      // Atualiza estado local
+      setClienteData(prev => ({ ...prev, consultas_marcadas: novasConsultas }));
+    } catch (err) {
+      alert('Erro ao cancelar consulta. Tente novamente.');
+    }
+  };
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -159,7 +197,10 @@ export default function MainDashboard() {
           </div>
 
           {/* Agendar Exame */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div 
+            className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+            onClick={() => navigate('/agendar-exame')}
+          >
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <span className="text-green-600 text-xl">�</span>
@@ -186,29 +227,45 @@ export default function MainDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Próximas Consultas */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-800">Próximas Consultas</h3>
+
+          {/* Próximas Consultas - Design Moderno e Limpo */}
+          <div className="bg-transparent">
+            <div className="px-2 pb-2">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-xl font-bold text-gray-800">Próximas Consultas</h3>
                 <a href="#" className="text-blue-600 text-sm hover:underline">Ver todas</a>
               </div>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="grid gap-6">
               {clienteData && Array.isArray(clienteData.consultas_marcadas) && clienteData.consultas_marcadas.length > 0 ? (
                 clienteData.consultas_marcadas.map((consulta, idx) => (
-                  <div key={idx} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-lg">
-                        {consulta.medico ? consulta.medico.split(' ')[0][0] : 'C'}
-                      </span>
+                  <div key={idx} className="bg-white shadow rounded-2xl px-6 py-5 flex flex-col gap-2">
+                    <div className="flex items-baseline gap-4 mb-2">
+                      <span className="text-blue-700 text-lg font-semibold">{consulta.data || 'Data'}</span>
+                      <span className="text-gray-700 text-base font-medium">{consulta.horario || 'Horário'}</span>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-800">{consulta.medico || 'Médico'}</h4>
-                      <p className="text-gray-600 text-sm">{consulta.tipo || 'Consulta'}</p>
-                      <p className="text-gray-500 text-sm">{consulta.data_hora || ''}</p>
+                    <div className="text-gray-900 font-bold text-lg">{consulta.tipo || 'Especialidade'}</div>
+                    <div className="text-gray-800 text-base">{consulta.medico || 'Médico'}</div>
+                    <div className="text-gray-500 text-sm flex items-center gap-2">
+                      <span>{consulta.unidade || 'Unidade'}</span>
+                      {consulta.unidade && (
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(consulta.unidade)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-1 text-blue-500 hover:text-blue-700"
+                          title="Ver localização no Maps"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>
+                        </a>
+                      )}
                     </div>
-                    <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">{consulta.status || 'Pendente'}</span>
+                    <button
+                      onClick={() => handleCancelConsulta(consulta, idx)}
+                      className="self-end mt-2 px-4 py-1 rounded bg-red-100 text-red-700 font-semibold text-sm hover:bg-red-200 transition-colors"
+                    >
+                      Cancelar
+                    </button>
                   </div>
                 ))
               ) : (

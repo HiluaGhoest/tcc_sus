@@ -5,6 +5,7 @@ import MainDashboard from "./MainDashboard";
 import AgendarConsulta from "./AgendarConsulta";
 import { supabase } from "./supabaseClient";
 import DoctorDashboard from "./DoctorDashboard";
+import AgendarExame from "./AgendarExame";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -45,6 +46,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<MainDashboard />} />
       <Route path="/agendar-consulta" element={<AgendarConsulta />} />
+      <Route path="/agendar-exame" element={<AgendarExame />} />
       <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
     </Routes>
   );
