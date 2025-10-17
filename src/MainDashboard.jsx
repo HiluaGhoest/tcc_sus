@@ -261,6 +261,12 @@ export default function MainDashboard() {
                       )}
                     </div>
                     <button
+                      onClick={() => handleReagendarConsulta(consulta, idx)}
+                      className="self-end mt-2 px-4 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-sm hover:bg-blue-200 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
                       onClick={() => handleCancelConsulta(consulta, idx)}
                       className="self-end mt-2 px-4 py-1 rounded bg-red-100 text-red-700 font-semibold text-sm hover:bg-red-200 transition-colors"
                     >
