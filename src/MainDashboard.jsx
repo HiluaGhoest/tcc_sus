@@ -165,7 +165,7 @@ export default function MainDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* Welcome Banner */}
 <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-12 mb-8 text-white relative overflow-hidden">
-  <div className="relative z-10 flex flex-col text-center md:text-left space-y-8">
+  <div className="relative z-10 text-center md:text-left space-y-6">
     {/* Bloco do texto */}
     <div>
       <h2 className="text-3xl font-bold mb-3">Bem-vindo ao seu painel médico</h2>
@@ -178,21 +178,21 @@ export default function MainDashboard() {
     <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
       <button
         onClick={() => navigate('/agendar-consulta')}
-        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center justify-center gap-2"
       >
         📅 Agendar Consulta
       </button>
 
       <button
         onClick={() => navigate('/agendar-exame')}
-        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center justify-center gap-2"
       >
         🧪 Agendar Exame
       </button>
 
       <button
         onClick={() => navigate('/ver-resultados')}
-        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center justify-center gap-2"
       >
         📊 Ver Resultados
       </button>
