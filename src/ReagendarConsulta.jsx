@@ -115,6 +115,9 @@ export default function ReagendarConsulta() {
   const [dataSelecionada, setDataSelecionada] = useState(dataInicial);
   const [mesAtual, setMesAtual] = useState(dataInicial.getMonth());
   const [anoAtual, setAnoAtual] = useState(dataInicial.getFullYear());
+  const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
+  const [horarioSelecionado, setHorarioSelecionado] = useState("");
+  const [generoFiltro, setGeneroFiltro] = useState("");
 
   // keep newDate in sync (ISO yyyy-mm-dd)
   useEffect(() => {
@@ -123,6 +126,47 @@ export default function ReagendarConsulta() {
       setNewDate(iso);
     }
   }, [dataSelecionada]);
+
+  // Aggregate availability across medicos for the selected date
+  useEffect(() => {
+    if (!dataSelecionada || medicos.length === 0) {
+      setHorariosDisponiveis([]);
+      return;
+    }
+    const diasSemana = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    const diaSemana = diasSemana[dataSelecionada.getDay()];
+    // filter medicos by specialty/unit similar to earlier behavior
+    const medicosFiltrados = medicos.filter(m => {
+      if (consulta.unidade_cnes && m.unit_cnes !== consulta.unidade_cnes) return false;
+      if (consulta.tipo && m.specialty && m.specialty.trim().toLowerCase() !== consulta.tipo.trim().toLowerCase()) return false;
+      return true;
+    });
+    let horarios = [];
+    medicosFiltrados.forEach(m => {
+      if (m.agenda && m.agenda[diaSemana]) horarios = horarios.concat(m.agenda[diaSemana]);
+    });
+    horarios = Array.from(new Set(horarios));
+    const disponiveis = horarios.map(h => {
+      const medicosLivres = medicosFiltrados.filter(m => {
+        const temHorario = m.agenda && m.agenda[diaSemana] && m.agenda[diaSemana].includes(h);
+        if (!temHorario) return false;
+        let ocupados = [];
+        if (m.consultas_marcadas) {
+          try {
+            const arr = Array.isArray(m.consultas_marcadas) ? m.consultas_marcadas : JSON.parse(m.consultas_marcadas);
+            ocupados = arr.filter(c => c.data === formatToStorageDate(dataSelecionada)).map(c => c.horario);
+          } catch {
+            ocupados = [];
+          }
+        }
+        return !ocupados.includes(h);
+      });
+      return { horario: h, medicosLivres };
+    }).filter(h => h.medicosLivres.length > 0);
+    setHorariosDisponiveis(disponiveis);
+    setHorarioSelecionado("");
+    setNewTime("");
+  }, [dataSelecionada, medicos, consulta]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -368,36 +412,25 @@ export default function ReagendarConsulta() {
                       })}
                     </div>
 
-                    <label className="block text-xs text-gray-500 mt-3">Escolher Médico</label>
-                    <select value={selectedMedico?.id || ''} onChange={e => setSelectedMedico(medicos.find(m=> String(m.id)===String(e.target.value)) || null)} className="mt-2 w-full border rounded px-3 py-2">
-                      <option value="">-- Selecionar médico --</option>
-                      {medicos.map(m => (
-                        <option key={m.id} value={m.id}>{m.nome || m.name} {m.specialty ? `· ${m.specialty}` : ''}</option>
-                      ))}
-                    </select>
+                    {/* Doctor will be selected after choosing a time slot (see right column) */}
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-xs text-gray-500">Horários Disponíveis</label>
                     <div className="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-3">
-                      {/* render slots based on selectedMedico availability */}
-                      {(() => {
-                        const medicoToUse = selectedMedico || (medicos.find(m => m.id === consulta?.medico_id) || null);
-                        const slots = medicoToUse ? getAvailableSlotsForMedico(medicoToUse, newDate) : [];
-                        if (!slots || slots.length === 0) {
-                          return <div className="text-sm text-gray-500">Nenhum horário disponível para o médico selecionado na data escolhida.</div>;
-                        }
-                        return slots.map(slot => (
-                          <button
-                            type="button"
-                            key={slot}
-                            onClick={() => setNewTime(slot)}
-                            className={`text-sm px-3 py-2 rounded border ${newTime===slot ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
-                          >
-                            {slot}
-                          </button>
-                        ));
-                      })()}
+                      {/* aggregated slots across doctors for the selected date */}
+                      {horariosDisponiveis.length > 0 ? horariosDisponiveis.map(h => (
+                        <button
+                          key={h.horario}
+                          type="button"
+                          onClick={() => { setHorarioSelecionado(h.horario); setNewTime(h.horario); }}
+                          className={`text-sm px-3 py-2 rounded border ${horarioSelecionado===h.horario ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
+                        >
+                          {h.horario}
+                        </button>
+                      )) : (
+                        <div className="text-sm text-gray-500">Nenhum horário disponível para este dia.</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -406,6 +439,39 @@ export default function ReagendarConsulta() {
                   <label className="block text-xs text-gray-500">Motivo do Reagendamento (Opcional)</label>
                   <textarea value={motivo} onChange={e => setMotivo(e.target.value)} placeholder="Descreva o motivo para o reagendamento..." className="mt-2 w-full border rounded px-3 py-2 h-28" />
                 </div>
+                {/* After selecting a slot, let user choose a doctor available at that slot */}
+                {horarioSelecionado && (
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-gray-700 mb-2">Escolha o Médico</h3>
+                    <div className="mb-2">
+                      <label className="mr-2 text-gray-600 font-medium">Filtrar por gênero:</label>
+                      <select className="p-1 border rounded bg-gray-100 text-gray-700" value={generoFiltro} onChange={e=>setGeneroFiltro(e.target.value)}>
+                        <option value="">Todos</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2 mb-6 max-h-72 overflow-y-auto">
+                      {(horariosDisponiveis.find(h => h.horario === horarioSelecionado)?.medicosLivres || [])
+                        .filter(m => {
+                          if (!generoFiltro) return true;
+                          if (!m.gender) return false;
+                          return m.gender.trim().toLowerCase() === generoFiltro.trim().toLowerCase();
+                        })
+                        .map(m => (
+                          <label key={m.id} className={`border rounded-xl p-3 flex flex-col cursor-pointer transition-all ${selectedMedico && selectedMedico.id === m.id ? "border-blue-600 bg-blue-50 shadow" : "border-gray-200 bg-white"}`}>
+                            <input type="radio" name="medico" className="hidden" checked={selectedMedico && selectedMedico.id === m.id} onChange={() => setSelectedMedico(m)} />
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-gray-800">{m.nome || "(Sem nome)"}</span>
+                              <span className="text-gray-500 text-xs">{m.specialty || ""}</span>
+                              {selectedMedico && selectedMedico.id === m.id && (<span className="ml-2 text-blue-600 text-lg">●</span>)}
+                            </div>
+                            <span className="text-gray-500 text-sm mt-1">Gênero: {m.gender || ""}</span>
+                          </label>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Summary box */}
