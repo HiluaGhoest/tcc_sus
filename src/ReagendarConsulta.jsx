@@ -271,8 +271,8 @@ export default function ReagendarConsulta() {
 
   // Render redesigned layout similar to the provided Figma image
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 flex items-center justify-center">
+      <div className="max-w-6xl w-full mx-auto max-h-screen overflow-auto">
   <button type="button" onClick={() => navigate(-1)} className="text-gray-600 mb-6 flex items-center gap-2">◀ Voltar</button>
 
         <h1 className="text-2xl font-semibold mb-4">Reagendar Consulta</h1>
