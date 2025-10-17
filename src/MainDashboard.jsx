@@ -165,13 +165,16 @@ export default function MainDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 {/* Welcome Banner */}
 <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-12 mb-8 text-white relative overflow-hidden">
-  <div className="relative z-10 text-center md:text-left">
-    <h2 className="text-3xl font-bold mb-3">Bem-vindo ao seu painel médico</h2>
-    <p className="text-blue-100 mb-10">
-      Gerencie suas consultas, exames e resultados em um só lugar
-    </p>
+  <div className="relative z-10 flex flex-col text-center md:text-left space-y-8">
+    {/* Bloco do texto */}
+    <div>
+      <h2 className="text-3xl font-bold mb-3">Bem-vindo ao seu painel médico</h2>
+      <p className="text-blue-100">
+        Gerencie suas consultas, exames e resultados em um só lugar
+      </p>
+    </div>
 
-    {/* Botões reposicionados e brancos */}
+    {/* Bloco dos botões */}
     <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
       <button
         onClick={() => navigate('/agendar-consulta')}
