@@ -273,12 +273,12 @@ export default function ReagendarConsulta() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <button onClick={() => navigate(-1)} className="text-gray-600 mb-6 flex items-center gap-2">◀ Voltar</button>
+  <button type="button" onClick={() => navigate(-1)} className="text-gray-600 mb-6 flex items-center gap-2">◀ Voltar</button>
 
         <h1 className="text-2xl font-semibold mb-4">Reagendar Consulta</h1>
         <p className="text-sm text-gray-500 mb-8">Selecione uma nova data e horário para sua consulta</p>
 
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start max-w-7xl mx-auto">
           {/* Left column - current consulta + info cards */}
           <aside className="lg:col-span-3 space-y-4">
             <div className="bg-white rounded-xl p-4 shadow-sm border">
@@ -342,7 +342,7 @@ export default function ReagendarConsulta() {
                   <div className="md:col-span-1">
                     <label className="block text-xs text-gray-500">Selecionar Data</label>
                     <div className="flex items-center justify-between mb-2">
-                      <button
+                      <button type="button"
                         className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded"
                         onClick={() => {
                           let novoMes = mesAtual;
@@ -360,7 +360,7 @@ export default function ReagendarConsulta() {
                         &#8592;
                       </button>
                       <span className="font-semibold text-gray-700">{meses[mesAtual]} {anoAtual}</span>
-                      <button
+                      <button type="button"
                         className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded"
                         onClick={() => {
                           let novoMes = mesAtual;
@@ -400,7 +400,7 @@ export default function ReagendarConsulta() {
                         else if (disabled) btnClass += "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed ";
                         else btnClass += "bg-white hover:bg-blue-50 border-gray-200 ";
                         return (
-                          <button
+                          <button type="button"
                             key={dia}
                             className={btnClass}
                             onClick={() => { if (!disabled) setDataSelecionada(new Date(anoAtual, mesAtual, dia)); }}
@@ -420,9 +420,8 @@ export default function ReagendarConsulta() {
                     <div className="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-3">
                       {/* aggregated slots across doctors for the selected date */}
                       {horariosDisponiveis.length > 0 ? horariosDisponiveis.map(h => (
-                        <button
+                        <button type="button"
                           key={h.horario}
-                          type="button"
                           onClick={() => { setHorarioSelecionado(h.horario); setNewTime(h.horario); }}
                           className={`text-sm px-3 py-2 rounded border ${horarioSelecionado===h.horario ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
