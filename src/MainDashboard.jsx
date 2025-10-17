@@ -260,7 +260,7 @@ export default function MainDashboard() {
                         </a>
                       )}
                     </div>
-                    <div>
+                    <div className="flex gap-3 mt-4 items-end">
                       <button
                         onClick={() => handleReagendarConsulta(consulta, idx)}
                         className="self-end mt-2 px-4 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-sm hover:bg-blue-200 transition-colors"
