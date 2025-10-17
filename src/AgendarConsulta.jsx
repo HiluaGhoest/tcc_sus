@@ -566,7 +566,7 @@ export default function AgendarConsulta() {
                           <button
                             className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
                             onClick={() => {
-                              const address = encodeURIComponent(`${u.nome}, ${u.endereco}, Brasil`);
+                              const address = encodeURIComponent(`${u.nome}, Brasil`);
                               window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
                             }}
                           >
