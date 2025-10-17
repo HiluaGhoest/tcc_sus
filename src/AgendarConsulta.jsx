@@ -565,8 +565,11 @@ export default function AgendarConsulta() {
                         {unidadeSelecionada && unidadeSelecionada.nome === u.nome && !isNaN(u.lat) && !isNaN(u.lng) && (
                           <button
                             className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${u.lat},${u.lng}`, '_blank')}
-                          >
+                            onClick={() => {
+                              const query = encodeURIComponent(`${u.nome} CNES ${u.cnes} Brasil`);
+                              window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                            }}
+                            >
                             Ver no mapa
                           </button>
                         )}
