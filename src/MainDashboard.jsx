@@ -170,31 +170,31 @@ export default function MainDashboard() {
                 <p className="text-blue-100">Gerencie suas consultas, exames e resultados em um só lugar</p>
               </div>
                 {/* Botões dentro da faixa azul */}
-  <div className="relative z-10 flex flex-wrap gap-4 mt-6">
-    <button
-      onClick={() => navigate('/agendar-consulta')}
-      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+            <div className="relative z-10 flex flex-wrap gap-4 mt-6">
+              <button
+                onClick={() => navigate('/agendar-consulta')}
+                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
                  hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-    >
-      📅 Agendar Consulta
-    </button>
+              >
+                📅 Agendar Consulta
+              </button>
 
-    <button
-      onClick={() => navigate('/agendar-exame')}
-      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+              <button
+                onClick={() => navigate('/agendar-exame')}
+                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
                  hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-    >
-      🔬 Agendar Exame
-    </button>
+              >
+                🔬 Agendar Exame
+              </button>
 
-    <button
-      onClick={() => navigate('/ver-resultados')}
-      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
-                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-    >
-      📊 Ver Resultados
-    </button>
-  </div>
+              <button
+                onClick={() => navigate('/ver-resultados')}
+                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+                          hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
+              >
+                📊 Ver Resultados
+              </button>
+            </div>
 
               <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-6xl opacity-20">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20" fill="none" viewBox="0 0 64 64">
