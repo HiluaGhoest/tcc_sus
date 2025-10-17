@@ -169,6 +169,8 @@ export default function MainDashboard() {
                 <h2 className="text-2xl font-bold mb-2">Bem-vindo ao seu painel médico</h2>
                 <p className="text-blue-100">Gerencie suas consultas, exames e resultados em um só lugar</p>
               </div>
+
+              <br />
                 {/* Botões dentro da faixa azul */}
             <div className="relative z-10 flex flex-wrap gap-4 mt-6">
               <button
