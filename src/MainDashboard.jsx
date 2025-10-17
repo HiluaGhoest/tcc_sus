@@ -163,49 +163,48 @@ export default function MainDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-12 mb-8 text-white relative overflow-hidden min-h-[180px] flex items-center">
-              <div className="relative z-10">
-                <h2 className="text-2xl font-bold mb-2">Bem-vindo ao seu painel médico</h2>
-                <p className="text-blue-100">Gerencie suas consultas, exames e resultados em um só lugar</p>
-              </div>
+{/* Welcome Banner */}
+<div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-12 mb-8 text-white relative overflow-hidden">
+  <div className="relative z-10 text-center md:text-left">
+    <h2 className="text-3xl font-bold mb-3">Bem-vindo ao seu painel médico</h2>
+    <p className="text-blue-100 mb-10">
+      Gerencie suas consultas, exames e resultados em um só lugar
+    </p>
 
-              <br />
-                {/* Botões dentro da faixa azul */}
-            <div className="relative z-10 flex flex-wrap gap-4 mt-6">
-              <button
-                onClick={() => navigate('/agendar-consulta')}
-                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
-                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-              >
-                📅 Agendar Consulta
-              </button>
+    {/* Botões reposicionados e brancos */}
+    <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
+      <button
+        onClick={() => navigate('/agendar-consulta')}
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+      >
+        📅 Agendar Consulta
+      </button>
 
-              <button
-                onClick={() => navigate('/agendar-exame')}
-                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
-                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-              >
-                🔬 Agendar Exame
-              </button>
+      <button
+        onClick={() => navigate('/agendar-exame')}
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+      >
+        🧪 Agendar Exame
+      </button>
 
-              <button
-                onClick={() => navigate('/ver-resultados')}
-                className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
-                          hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
-              >
-                📊 Ver Resultados
-              </button>
-            </div>
+      <button
+        onClick={() => navigate('/ver-resultados')}
+        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center gap-2"
+      >
+        📊 Ver Resultados
+      </button>
+    </div>
+  </div>
 
-              <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-6xl opacity-20">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20" fill="none" viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="32" fill="#fff" opacity="0.2" />
-                <circle cx="32" cy="26" r="10" fill="#fff" opacity="0.5" />
-                <rect x="18" y="40" width="28" height="12" rx="6" fill="#fff" opacity="0.5" />
-                </svg>
-              </div>
-            </div>
+  {/* Ícone decorativo à direita */}
+  <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-6xl opacity-20">
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20" fill="none" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="32" fill="#fff" opacity="0.2" />
+      <circle cx="32" cy="26" r="10" fill="#fff" opacity="0.4" />
+      <rect x="18" y="40" width="28" height="12" rx="6" fill="#fff" opacity="0.4" />
+    </svg>
+  </div>
+</div>
 
 
 
