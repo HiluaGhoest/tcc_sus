@@ -566,10 +566,10 @@ export default function AgendarConsulta() {
                           <button
                             className="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
                             onClick={() => {
-                              const query = encodeURIComponent(`${u.nome} CNES ${u.cnes} Brasil`);
-                              window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                              const address = encodeURIComponent(`${u.nome}, ${u.endereco}, Brasil`);
+                              window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
                             }}
-                            >
+                          >
                             Ver no mapa
                           </button>
                         )}
