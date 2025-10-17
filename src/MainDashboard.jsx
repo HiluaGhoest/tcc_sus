@@ -169,6 +169,33 @@ export default function MainDashboard() {
                 <h2 className="text-2xl font-bold mb-2">Bem-vindo ao seu painel médico</h2>
                 <p className="text-blue-100">Gerencie suas consultas, exames e resultados em um só lugar</p>
               </div>
+                {/* Botões dentro da faixa azul */}
+  <div className="relative z-10 flex flex-wrap gap-4 mt-6">
+    <button
+      onClick={() => navigate('/agendar-consulta')}
+      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
+    >
+      📅 Agendar Consulta
+    </button>
+
+    <button
+      onClick={() => navigate('/agendar-exame')}
+      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
+    >
+      🔬 Agendar Exame
+    </button>
+
+    <button
+      onClick={() => navigate('/ver-resultados')}
+      className="bg-white/10 border border-white/30 rounded-xl px-6 py-3 text-white font-semibold text-sm 
+                 hover:scale-105 transition-transform duration-200 backdrop-blur-sm"
+    >
+      📊 Ver Resultados
+    </button>
+  </div>
+
               <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-6xl opacity-20">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20" fill="none" viewBox="0 0 64 64">
                 <circle cx="32" cy="32" r="32" fill="#fff" opacity="0.2" />
@@ -176,74 +203,9 @@ export default function MainDashboard() {
                 <rect x="18" y="40" width="28" height="12" rx="6" fill="#fff" opacity="0.5" />
                 </svg>
               </div>
+            </div>
 
-                {/* Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Agendar Consulta */}
-        <button
-          aria-label="Agendar Consulta - abre a tela de agendamento"
-          onClick={() => navigate('/agendar-consulta')}
-          className="group bg-white rounded-xl p-6 shadow-sm border border-gray-100 
-                     hover:shadow-md hover:scale-105 hover:bg-[#2E6FF2] hover:text-white 
-                     transition-transform transform duration-200 cursor-pointer text-left
-                     focus:outline-none focus:ring-4 focus:ring-[#2E6FF2]/30 focus:ring-offset-2"
-        >
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center 
-                            bg-blue-100 group-hover:bg-white/20 group-hover:text-white transition-colors">
-              <span className="text-blue-600 text-xl group-hover:text-white">📅</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-white">Agendar Consulta</h3>
-              <p className="text-gray-500 text-sm group-hover:text-white/90">Marque uma nova consulta</p>
-            </div>
-          </div>
-        </button>
 
-        {/* Agendar Exame */}
-        <button
-          aria-label="Agendar Exame - solicita um novo exame"
-          onClick={() => navigate('/agendar-exame')}
-          className="group bg-white rounded-xl p-6 shadow-sm border border-gray-100 
-                     hover:shadow-md hover:scale-105 hover:bg-[#2E6FF2] hover:text-white 
-                     transition-transform transform duration-200 cursor-pointer text-left
-                     focus:outline-none focus:ring-4 focus:ring-[#2E6FF2]/30 focus:ring-offset-2"
-        >
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center 
-                            bg-green-100 group-hover:bg-white/20 group-hover:text-white transition-colors">
-              <span className="text-green-600 text-xl group-hover:text-white">🔬</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-white">Agendar Exame</h3>
-              <p className="text-gray-500 text-sm group-hover:text-white/90">Solicite um novo exame</p>
-            </div>
-          </div>
-        </button>
-                    
-        {/* Ver Resultados */}
-        <button
-          aria-label="Ver Resultados - acessar resultados dos exames"
-          onClick={() => navigate('/ver-resultados')}
-          className="group bg-white rounded-xl p-6 shadow-sm border border-gray-100 
-                     hover:shadow-md hover:scale-105 hover:bg-[#2E6FF2] hover:text-white 
-                     transition-transform transform duration-200 cursor-pointer text-left
-                     focus:outline-none focus:ring-4 focus:ring-[#2E6FF2]/30 focus:ring-offset-2"
-        >
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center 
-                            bg-purple-100 group-hover:bg-white/20 group-hover:text-white transition-colors">
-              <span className="text-purple-600 text-xl group-hover:text-white">📊</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-white">Ver Resultados</h3>
-              <p className="text-gray-500 text-sm group-hover:text-white/90">Acesse seus resultados</p>
-            </div>
-          </div>
-        </button>
-      </div>
-
-            </div>
 
       
 
