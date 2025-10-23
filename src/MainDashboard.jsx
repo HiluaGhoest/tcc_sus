@@ -258,7 +258,7 @@ export default function MainDashboard() {
                         onClick={() => handleCancelConsulta(consulta, idx)}
                         className="self-end mt-2 px-4 py-1 rounded bg-red-100 text-red-700 font-semibold text-sm hover:bg-red-200 transition-colors"
                       >
-                        Cancelar
+                        Cancelar Consulta
                       </button>
                     </div>
                   </div>
