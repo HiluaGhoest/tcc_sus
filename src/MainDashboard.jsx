@@ -144,7 +144,7 @@ export default function MainDashboard() {
             <nav className="flex space-x-8 flex-1 justify-center">
               <a href="#" className="text-blue-600 font-medium">Agendamentos</a>
               <button
-                onClick={() => navigate('exames')}
+                onClick={() => navigate('/exames')}
                 className="text-gray-600 hover:text-blue-600"
               >
               Exames
