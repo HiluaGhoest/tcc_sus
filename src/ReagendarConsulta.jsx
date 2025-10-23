@@ -196,7 +196,15 @@ export default function ReagendarConsulta() {
 
       // update cliente consultas_marcadas
       const novasConsultas = Array.isArray(cliente.consultas_marcadas) ? [...cliente.consultas_marcadas] : [];
-      const updatedConsulta = { ...consulta, data: newDate, horario: newTime, reagendada: true, motivo_reagendamento: motivo };
+      const updatedConsulta = { 
+        ...consulta,
+        data: newDate,
+        horario: newTime,
+        reagendada: true,
+        motivo_reagendamento: motivo,
+        medico: selectedMedico?.nome || consulta?.medico || null,
+        medico_id: selectedMedico?.id || consulta?.medico_id || null,
+      };
       if (typeof idx === 'number' && idx >= 0 && idx < novasConsultas.length) {
         novasConsultas[idx] = updatedConsulta;
       } else {
@@ -480,7 +488,7 @@ export default function ReagendarConsulta() {
                     <div className="text-xs text-blue-700">Resumo do Reagendamento</div>
                     <div className="font-medium mt-1">Nova Data: <span className="font-normal">{newDate || '—'}</span></div>
                     <div className="font-medium">Novo Horário: <span className="font-normal">{newTime || '—'}</span></div>
-                    <div className="font-medium">Médico: <span className="font-normal">{consulta?.medico || '—'}</span></div>
+                    <div className="font-medium">Médico: <span className="font-normal">{selectedMedico?.nome || consulta?.medico || '—'}</span></div>
                   </div>
                 </div>
               </div>
