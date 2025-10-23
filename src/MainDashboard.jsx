@@ -149,13 +149,17 @@ export default function MainDashboard() {
               Agendamentos
               </button>
               <button
+<<<<<<< HEAD
               onClick={() => {
               navigate('/exames');
               }}
+=======
+                onClick={() => navigate('/exames')}
+>>>>>>> 0f63b8293c3c2bdf2737af95af24c1fb71bdf029
                 className="text-gray-600 hover:text-blue-600"
               >
                 Exames
-              </button>
+              </button> 
               <button 
               onClick={() => navigate('/')}
               className="text-gray-600 hover:text-blue-600"
