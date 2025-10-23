@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
+import logo from './assets/logo.png';
 
 // Unidades agora serão buscadas da API CNES
 
@@ -343,11 +344,9 @@ export default function AgendarConsulta() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center">
           <div className="flex items-center space-x-2 flex-1">
-            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-              <span className="text-white text-lg font-bold">+</span>
+              <img src={logo} alt="SISVida" className="w-8 h-8 rounded object-contain" />
+              <h1 className="text-xl font-bold text-blue-600">SISVida</h1>
             </div>
-            <h1 className="text-xl font-bold text-blue-600">SISVida</h1>
-          </div>
         </div>
       </header>
       <main className="flex-1 flex items-center justify-center">

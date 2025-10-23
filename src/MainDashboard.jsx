@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
+import logo from './assets/logo.png';
 
 export default function MainDashboard() {
   // Função para cancelar consulta
@@ -135,9 +136,7 @@ export default function MainDashboard() {
           <div className="flex items-center py-4">
             {/* Logo */}
             <div className="flex items-center space-x-2 flex-1">
-              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                <span className="text-white text-lg font-bold">+</span>
-              </div>
+              <img src={logo} alt="SISVida" className="w-8 h-8 rounded object-contain" />
               <h1 className="text-xl font-bold text-blue-600">SISVida</h1>
             </div>
             

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
+import logo from './assets/logo.png';
 
 export default function ReagendarConsulta() {
   const location = useLocation();
@@ -296,7 +297,7 @@ export default function ReagendarConsulta() {
           <aside className="lg:col-span-3 space-y-4">
             <div className="bg-white rounded-xl p-4 shadow-sm border">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center text-blue-600 font-bold">Dr</div>
+                <img src={logo} alt="Dr" className="w-12 h-12 rounded object-contain bg-white p-1" />
                 <div>
                   <div className="font-semibold text-gray-800">{consulta?.medico || 'Dr. Nome'}</div>
                   <div className="text-sm text-gray-500">{consulta?.tipo || 'Especialidade'}</div>

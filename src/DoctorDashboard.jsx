@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { supabase } from "./supabaseClient";
+import logo from './assets/logo.png';
 
 // Especialidades exemplo
 const SPECIALTIES = [
@@ -210,9 +211,7 @@ export default function DoctorDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center py-4">
             <div className="flex items-center space-x-2 flex-1">
-              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                <span className="text-white text-lg font-bold">+</span>
-              </div>
+              <img src={logo} alt="SISVida Médico" className="w-8 h-8 rounded object-contain" />
               <h1 className="text-xl font-bold text-blue-600">SISVida Médico</h1>
             </div>
             <nav className="flex space-x-8 flex-1 justify-center">
