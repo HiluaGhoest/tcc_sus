@@ -1,159 +1,208 @@
 import React, { useState } from "react";
-import accountIcon from './assets/icons/account.png';
-import barelIcon from './assets/icons/barefoot.png';
-import covidIcon from './assets/icons/covid-19.png';
-import hivIcon from './assets/icons/hiv.png';
-import syphilisIcon from './assets/icons/syphilis.png';
-import urinaIcon from './assets/icons/urina-escura.png';
-import sangueIcon from './assets/icons/blood-donor.png';
+import { FaVial, FaLungs, FaFlask, FaEye, FaDownload } from "react-icons/fa";
+import accountIcon from "./assets/icons/account.png";
 
-const Exames = () => {
-  const [showResults, setShowResults] = useState(false);
-
-  const resultados = [
-    "exame de sangue",
-    "exame de urina",
-    "exame de covid",
-    "exame do pézinho",
-    "exame de sífilis",
-    "exame de HIV",
+export default function Exames() {
+  const exames = [
+    {
+      nome: "Hemograma Completo",
+      tipo: "Exame de sangue completo",
+      data: "15 Jan 2024",
+      horario: "08:30",
+      medico: "Dr. Silva",
+      status: "Disponível",
+      resultado: "16 Jan 2024, 14:20",
+      icone: <FaVial color="#e53935" size={22} />,
+    },
+    {
+      nome: "Raio-X Tórax",
+      tipo: "Exame de imagem do tórax",
+      data: "12 Jan 2024",
+      horario: "14:15",
+      medico: "Dr. Santos",
+      status: "Disponível",
+      resultado: "12 Jan 2024, 16:45",
+      icone: <FaLungs color="#1565c0" size={22} />,
+    },
+    {
+      nome: "Exame de Urina",
+      tipo: "Análise completa de urina",
+      data: "18 Jan 2024",
+      horario: "09:00",
+      medico: "Dra. Costa",
+      status: "Pendente",
+      resultado: "Processamento em andamento",
+      icone: <FaFlask color="#f9a825" size={22} />,
+    },
   ];
 
   return (
-    <div style={{
-      height: '100vh',
-      width: '100%',
-      background: 'linear-gradient(135deg, #e3f0fa 0%, #f7fbff 100%)',
-      fontFamily: 'sans-serif',
-      margin: 0,
-      padding: 0,
-      boxSizing: 'border-box'
-    }}>
+    <div
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "#f9fafc",
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
       {/* Header */}
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '1rem 2rem 0.5rem 2rem',
-        background: 'transparent',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontWeight: 700, fontSize: 22, color: '#3078af' }}>SISVida</span>
-        </div>
-        <div style={{ display: 'flex', gap: 16 }}>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-            <span style={{ fontSize: 28 }}>⌂</span>
-          </button>
-          <div style={{
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            background: '#e3f2fd',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-          }}>
-            <img src={accountIcon} alt="Avatar" style={{ width: 32, height: 32, objectFit: 'contain' }} />
-          </div>
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "1.2rem 2rem",
+          background: "#fff",
+          borderBottom: "1px solid #e0e0e0",
+        }}
+      >
+        <span style={{ color: "#3078af", fontSize: 22, fontWeight: 700 }}>
+          SISVida
+        </span>
+        <div
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: "50%",
+            overflow: "hidden",
+            background: "#e3f2fd",
+          }}
+        >
+          <img
+            src={accountIcon}
+            alt="User"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         </div>
       </header>
 
-      {/* Título */}
-      <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: 28, color: '#333', margin: '1rem 0' }}>Exames</h2>
+      {/* Conteúdo */}
+      <main style={{ maxWidth: 900, margin: "2rem auto", background: "#fff", padding: "2rem", borderRadius: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: "#333" }}>
+          Resultados dos Exames
+        </h2>
+        <p style={{ color: "#666", marginTop: 6 }}>
+          Visualize e gerencie os resultados dos seus exames médicos.
+        </p>
 
-      {/* Grid de opções */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '2rem',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        boxSizing: 'border-box',
-        padding: '0 2rem',
-      }}>
-        {/* Cards de exames */}
-        <ExameCard icon={sangueIcon} label="Coleta de Sangue" />
-        <ExameCard icon={urinaIcon} label="Coleta de Urina" />
-        <ExameCard icon={covidIcon} label="Teste de Covid" />
-        <ExameCard icon={hivIcon} label="Teste de HIV" />
-        <ExameCard icon={syphilisIcon} label="Teste de Sifilis" />
-        <ExameCard icon={barelIcon} label="Teste do Pézinho" />
-      </div>
-
-      {/* Botão Resultados */}
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0', position: 'relative' }}>
-        <button
+        {/* Filtros */}
+        <div
           style={{
-            background: '#fff',
-            border: 'none',
-            borderRadius: 24,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            padding: '0.75rem 2.5rem',
-            fontSize: 18,
-            fontWeight: 500,
-            color: '#3078af',
-            cursor: 'pointer',
+            display: "flex",
+            gap: "1rem",
+            marginTop: "1.5rem",
+            alignItems: "center",
           }}
-          onClick={() => setShowResults(!showResults)}
         >
-          Resultados
-        </button>
+          <select style={selectStyle}>
+            <option>Últimos 30 dias</option>
+          </select>
+          <select style={selectStyle}>
+            <option>Todos os tipos</option>
+          </select>
+          <select style={selectStyle}>
+            <option>Todos</option>
+          </select>
+          <button style={buscarBtn}>Buscar</button>
+        </div>
 
-        {/* Dropdown */}
-  {showResults && (
-  <div style={{
-    position: 'absolute',
-    top: 0,
-    left: '65%',       // ao lado do botão
-    background: '#fff',
-    borderRadius: 8,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-    width: 200,
-    zIndex: 100,
+        {/* Cards */}
+        <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+          {exames.map((exame, index) => (
+            <div
+              key={index}
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                padding: "1.2rem 1.5rem",
+                boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
+                border: "1px solid #eee",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                  {exame.icone}
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
+                      {exame.nome}
+                    </h3>
+                    <p style={{ margin: 0, color: "#666" }}>{exame.tipo}</p>
+                  </div>
+                </div>
+                <span
+                  style={{
+                    background: exame.status === "Disponível" ? "#e8f5e9" : "#fff8e1",
+                    color: exame.status === "Disponível" ? "#2e7d32" : "#f9a825",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    padding: "4px 10px",
+                    borderRadius: 8,
+                  }}
+                >
+                  {exame.status}
+                </span>
+              </div>
 
-    // Novos estilos para scroll
-    maxHeight: 150,      // altura máxima visível
-    overflowY: 'auto',   // aparece barra de rolagem se exceder
-  }}>
-    {resultados.map((exame, index) => (
-      <div key={index} style={{
-        padding: '0.75rem 1rem',
-        borderBottom: index < resultados.length - 1 ? '1px solid #eee' : 'none',
-        cursor: 'pointer',
-        color: '#333'
-      }}>
-        {exame}
-      </div>
-    ))}
-  </div>
-)}
+              <div style={{ marginTop: 10, color: "#555", fontSize: 15 }}>
+                <p>Data do exame: <b>{exame.data}</b> — Horário: <b>{exame.horario}</b></p>
+                <p>Médico: <b>{exame.medico}</b></p>
+                <p>
+                  {exame.status === "Disponível"
+                    ? `Resultado liberado em ${exame.resultado}`
+                    : exame.resultado}
+                </p>
+              </div>
 
-      </div>
+              {/* Ações */}
+              <div style={{ marginTop: 10, display: "flex", gap: "1rem" }}>
+                {exame.status === "Disponível" ? (
+                  <>
+                    <button style={actionBtn}><FaEye /> Visualizar</button>
+                    <button style={actionBtn}><FaDownload /> Download</button>
+                  </>
+                ) : (
+                  <button style={{ ...actionBtn, opacity: 0.6, cursor: "default" }}>Aguardando</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Paginação */}
+        <div style={{ marginTop: "2rem", textAlign: "right", fontSize: 14, color: "#666" }}>
+          Mostrando 1 a 3 de 12 resultados
+        </div>
+      </main>
     </div>
   );
+}
+
+const selectStyle = {
+  padding: "0.6rem 1rem",
+  borderRadius: 8,
+  border: "1px solid #ccc",
+  fontSize: 14,
 };
 
-const ExameCard = ({ icon, label }) => (
-  <div style={{
-    background: '#fff',
-    borderRadius: 16,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '1.2rem 0.5rem 0.7rem 0.5rem',
-    minWidth: 120,
-    minHeight: 120,
-    cursor: 'pointer',
-  }}>
-    <img src={icon} alt={label} style={{ width: 56, height: 56, objectFit: 'contain' }} />
-    <span style={{ fontSize: 18, color: '#333', fontWeight: 500 }}>{label}</span>
-  </div>
-);
+const buscarBtn = {
+  background: "#3078af",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  padding: "0.6rem 1.4rem",
+  fontSize: 15,
+  fontWeight: 600,
+  cursor: "pointer",
+};
 
-export default Exames;
+const actionBtn = {
+  background: "none",
+  border: "none",
+  color: "#3078af",
+  fontWeight: 600,
+  fontSize: 15,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.4rem",
+};
