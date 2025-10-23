@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import accountIcon from "./assets/icons/account.png";
 
 export default function Exames() {
   const exames = [
