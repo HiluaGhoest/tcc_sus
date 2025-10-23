@@ -143,7 +143,7 @@ export default function MainDashboard() {
             {/* Navigation - Centered */}
             <nav className="flex space-x-8 flex-1 justify-center">
               <a href="#" className="text-blue-600 font-medium">Agendamentos</a>
-              <a href="#" className="text-gray-600 hover:text-blue-600">Exames</a>
+              <a href="Exames.jsx" className="text-gray-600 hover:text-blue-600">Exames</a>
               <a href="#" className="text-gray-600 hover:text-blue-600">Consultas</a>
             </nav>
             
