@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
@@ -10,7 +11,7 @@ export default function AgendarConsulta() {
     // Obter id do usuário autenticado via Supabase Auth
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData || !userData.user || !userData.user.id) {
-      alert('Usuário não identificado. Faça login novamente.');
+      Swal.fire({ icon: 'error', title: 'Usuário não identificado', text: 'Faça login novamente.' });
       return;
     }
     const uuid = userData.user.id;
@@ -31,7 +32,7 @@ export default function AgendarConsulta() {
       .eq('id', uuid)
       .single();
     if (error) {
-      alert('Erro ao buscar dados do usuário.');
+      Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao buscar dados do usuário.' });
       return;
     }
     let consultas = [];
@@ -49,7 +50,7 @@ export default function AgendarConsulta() {
       .update({ consultas_marcadas: consultas })
       .eq('id', uuid);
     if (updateError) {
-      alert('Erro ao salvar consulta.');
+      Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao salvar consulta.' });
     } else {
       // Atualizar consultas_marcadas do médico
       if (medicoSelecionado && medicoSelecionado.id) {
@@ -78,7 +79,7 @@ export default function AgendarConsulta() {
           .update({ consultas_marcadas: consultasMedico })
           .eq('id', medicoSelecionado.id);
       }
-      alert('Consulta agendada com sucesso!');
+      Swal.fire({ icon: 'success', title: 'Agendado', text: 'Consulta agendada com sucesso!' });
       navigate('/');
     }
   }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
@@ -38,7 +39,11 @@ export default function MainDashboard() {
       // Atualiza estado local
       setClienteData(prev => ({ ...prev, consultas_marcadas: novasConsultas }));
     } catch (err) {
-      alert('Erro ao cancelar consulta. Tente novamente.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao cancelar consulta',
+        text: 'Tente novamente.'
+      });
     }
   };
   const navigate = useNavigate();
@@ -98,7 +103,11 @@ export default function MainDashboard() {
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      alert('Erro ao fazer logout: ' + error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao fazer logout',
+        text: error.message
+      });
     }
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
@@ -273,7 +274,11 @@ export default function ReagendarConsulta() {
       navigate(-1);
     } catch (err) {
       setLoading(false);
-      alert('Erro ao reagendar: ' + (err.message || err));
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao reagendar',
+        text: (err && err.message) ? err.message : String(err),
+      });
     }
   };
 
@@ -494,7 +499,7 @@ export default function ReagendarConsulta() {
               </div>
 
               <div className="flex justify-end gap-3">
-                <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 rounded bg-red-500 text-white">Cancelar</button>
+                <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 rounded bg-gray-500 text-white">Cancelar</button>
                 <button type="submit" disabled={loading} className="px-6 py-2 rounded bg-blue-600 text-white">{loading ? 'Salvando...' : 'Confirmar Reagendamento'}</button>
               </div>
             </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { supabase } from "./supabaseClient";
 
 // Especialidades exemplo
@@ -186,7 +187,7 @@ export default function DoctorDashboard() {
       })
       .eq('id', doctor.id);
     if (error) {
-      alert('Erro ao salvar: ' + error.message);
+      Swal.fire({ icon: 'error', title: 'Erro ao salvar', text: error.message });
     } else {
       setProfile({ ...profile, ...form });
       setEditMode(false);

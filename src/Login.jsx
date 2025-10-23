@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from 'sweetalert2';
 // Função para aplicar máscara de CPF
 function maskCpf(value) {
   return value
@@ -25,7 +26,7 @@ export default function Login() {
       .single();
 
     if (error || !data) {
-      alert("CPF not found!");
+      Swal.fire({ icon: 'error', title: 'CPF não encontrado', text: 'Verifique o CPF e tente novamente.' });
       return;
     }
 
@@ -35,7 +36,7 @@ export default function Login() {
     });
 
     if (loginError) {
-      alert(loginError.message);
+      Swal.fire({ icon: 'error', title: 'Erro ao entrar', text: loginError.message });
       return;
     }
 
