@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FaVial, FaLungs, FaFlask, FaEye, FaDownload } from "react-icons/fa";
+import accountIcon from "./assets/account.png";
 
 export default function Exames() {
   const exames = [
