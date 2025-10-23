@@ -149,14 +149,14 @@ export default function MainDashboard() {
               Agendamentos
               </button>
               <button
-  onClick={() => {
-    console.log('Navegando para /exames');
-    navigate('/exames');
-  }}
-  className="text-gray-600 hover:text-blue-600"
->
-  Exames
-</button>
+              onClick={() => {
+              console.log('Navegando para /exames');
+              navigate('/exames');
+              }}
+                className="text-gray-600 hover:text-blue-600"
+              >
+                Exames
+              </button>
               <button 
               onClick={() => navigate('/')}
               className="text-gray-600 hover:text-blue-600"
