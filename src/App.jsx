@@ -7,6 +7,7 @@ import { supabase } from "./supabaseClient";
 import DoctorDashboard from "./DoctorDashboard";
 import AgendarExame from "./AgendarExame";
 import ReagendarConsulta from "./ReagendarConsulta";
+import exames from "/Exames.jsx"
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -97,6 +98,7 @@ export default function App() {
   <Route path="/agendar-consulta" element={<AgendarConsulta />} />
   <Route path="/agendar-exame" element={<AgendarExame />} />
   <Route path="/reagendar-consulta" element={<ReagendarConsulta />} />
+  <Route path="/exames" element={exames} />
       <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
     </Routes>
   );
