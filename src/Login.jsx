@@ -30,7 +30,7 @@ export default function Login() {
       return;
     }
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
+    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
       email: data.email || `${cpf}@fakecpf.local`,
       password,
     });

@@ -150,7 +150,7 @@ export default function MainDashboard() {
               </button>
               <button
               onClick={() => {
-              navigate('./exames');
+              navigate('/exames');
               }}
                 className="text-gray-600 hover:text-blue-600"
               >
