@@ -7,7 +7,15 @@ export default function MainDashboard() {
   // Função para cancelar consulta
   const handleCancelConsulta = async (consulta, idx) => {
     if (!clienteData || !profile) return;
-    if (!window.confirm('Tem certeza que deseja cancelar esta consulta?')) return;
+    const result = await Swal.fire({
+      title: 'Confirmação',
+      text: 'Tem certeza que deseja cancelar esta consulta?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, cancelar',
+      cancelButtonText: 'Não',
+    });
+    if (!result.isConfirmed) return;
 
     try {
       // Remove do usuário
