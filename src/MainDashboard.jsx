@@ -142,14 +142,27 @@ export default function MainDashboard() {
             
             {/* Navigation - Centered */}
             <nav className="flex space-x-8 flex-1 justify-center">
-              <a href="#" className="text-blue-600 font-medium">Agendamentos</a>
-              <button
-                onClick={() => navigate('/exames')}
-                className="text-gray-600 hover:text-blue-600"
+              <button 
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-blue-600"
               >
-              Exames
+              Agendamentos
               </button>
-              <a href="#" className="text-gray-600 hover:text-blue-600">Consultas</a>
+              <button
+  onClick={() => {
+    console.log('Navegando para /exames');
+    navigate('/exames');
+  }}
+  className="text-gray-600 hover:text-blue-600"
+>
+  Exames
+</button>
+              <button 
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-blue-600"
+              >
+              Consultas
+              </button>
             </nav>
             
             {/* User Section */}
