@@ -98,7 +98,6 @@ export default function App() {
   <Route path="/agendar-consulta" element={<AgendarConsulta />} />
   <Route path="/agendar-exame" element={<AgendarExame />} />
   <Route path="/reagendar-consulta" element={<ReagendarConsulta />} />
-  <Link to="/exames" />
   <Route path="/exames" element={<Exames />} />
   <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
     </Routes>

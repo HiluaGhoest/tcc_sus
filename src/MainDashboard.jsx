@@ -150,8 +150,7 @@ export default function MainDashboard() {
               </button>
               <button
               onClick={() => {
-              console.log('Navegando para /exames');
-              navigate('/exames');
+              navigate('./exames');
               }}
                 className="text-gray-600 hover:text-blue-600"
               >
