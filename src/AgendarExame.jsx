@@ -274,9 +274,9 @@ export default function AgendarExame() {
         const temHorario = m.agenda && m.agenda[diaSemana] && m.agenda[diaSemana].includes(h);
         // Verifica se não está ocupado
         let ocupados = [];
-        if (m.consultas_marcadas) {
+        if (m.exames_marcadas) {
           try {
-            const arr = Array.isArray(m.consultas_marcadas) ? m.consultas_marcadas : JSON.parse(m.consultas_marcadas);
+            const arr = Array.isArray(m.exames_marcadas) ? m.exames_marcadas : JSON.parse(m.exames_marcadas);
             ocupados = arr.filter(c => c.data === dataSelecionadaFormatada).map(c => c.horario);
           } catch {
             ocupados = [];
@@ -288,7 +288,7 @@ export default function AgendarExame() {
     }).filter(h => h.medicosLivres.length > 0);
     setHorariosDisponiveis(horariosDisponiveis);
     setMedicoSelecionado(null); // Resetar médico ao trocar horário
-  }, [dataSelecionada, unidadeSelecionada, tipoConsultaSelecionado, medicos]);
+  }, [dataSelecionada, unidadeSelecionada, tipoExameSelecionado, medicos]);
 
   // Debug: log horários disponíveis
   useEffect(() => {
@@ -477,7 +477,7 @@ export default function AgendarExame() {
                   </>
                 )}
               </div>
-              {/* Bloco da direita: Unidades e Tipo de Consulta */}
+              {/* Bloco da direita: Unidades e Tipo de Exame */}
               
               <div>
                 {/* Tipo de Exame */}
