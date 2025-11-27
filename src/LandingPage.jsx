@@ -57,6 +57,7 @@ function generateBlurSpots(count, radius) {
 export default function LandingPage() {
   const [view, setView] = useState(null);
   const [popupMessage, setPopupMessage] = useState(null);
+  const [lgpdOpen, setLgpdOpen] = useState(false);
   // Gerar blur spots uma vez ao montar
   const [blurSpots, setBlurSpots] = useState("");
   useEffect(() => {
@@ -143,6 +144,40 @@ export default function LandingPage() {
             </div>
           </div>
   )}
+
+      {/* LGPD fixed button (does not affect layout) */}
+      <button
+        onClick={() => setLgpdOpen(true)}
+        className="fixed left-4 bottom-4 z-40 bg-blue-600 text-white px-3 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
+        aria-label="Informações LGPD"
+      >
+        LGPD
+      </button>
+
+      {/* LGPD Overlay Modal (fixed, overlay only) */}
+      {lgpdOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative mx-4">
+            <button
+              onClick={() => setLgpdOpen(false)}
+              className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-red-500 hover:bg-red-700 transition"
+              aria-label="Fechar LGPD"
+            >
+              <span className="text-white text-lg font-bold">✕</span>
+            </button>
+            <h2 className="text-xl font-semibold mb-2">Privacidade (LGPD)</h2>
+            <p className="text-sm text-gray-700">
+              Este site é seguro para navegação. Não coletamos dados sensíveis sem o seu
+              consentimento. Utilizamos serviços de armazenamento confiáveis (ex.: Supabase)
+              apenas para as funcionalidades necessárias ao serviço. Para dúvidas ou
+              solicitações relacionadas aos seus dados, entre em contato conosco.
+            </p>
+            <div className="mt-4 text-right">
+              <button onClick={() => setLgpdOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg">Fechar</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         /* Rotating circular gradient */
