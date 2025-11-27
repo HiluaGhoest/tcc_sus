@@ -164,13 +164,6 @@ export default function MainDashboard() {
             
             {/* User Section */}
             <div className="flex items-center space-x-4 flex-1 justify-end">
-              {/* Notifications */}
-              <div className="relative">
-                <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-                  <span className="text-gray-600 text-sm">🔔</span>
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
-              </div>
               
               {/* User Profile */}
               <div className="flex items-center space-x-2">
@@ -219,13 +212,6 @@ export default function MainDashboard() {
                 className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center justify-center gap-2"
               >
                 🧪 Agendar Exame
-              </button>
-                      
-             <button
-                onClick={() => navigate('/ver-resultados')}
-                className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-blue-50 hover:scale-105 transition-transform flex items-center justify-center gap-2"
-              >
-                📊 Ver Resultados
               </button>
             </div>
           </div>
@@ -302,31 +288,6 @@ export default function MainDashboard() {
 
           {/* Resultados e Exames */}
           <div className="space-y-6">
-            {/* Resultados Recentes */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-800">Resultados Recentes</h3>
-              </div>
-              <div className="p-6 space-y-3">
-                {clienteData && Array.isArray(clienteData.resultados_exames) && clienteData.resultados_exames.length > 0 ? (
-                  clienteData.resultados_exames.map((resultado, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <div>
-                          <p className="font-medium text-gray-800">{resultado.nome_exame || 'Exame'}</p>
-                          <p className="text-gray-500 text-sm">{resultado.data || ''}</p>
-                        </div>
-                      </div>
-                      <a href="#" className="text-blue-600 text-sm hover:underline">Ver</a>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-gray-500">Nenhum resultado disponível.</div>
-                )}
-              </div>
-            </div>
-
             {/* Exames Agendados */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100">
