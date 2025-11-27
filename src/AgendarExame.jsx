@@ -252,11 +252,32 @@ export default function AgendarExame() {
     // Obtém o dia da semana em inglês
     const diasSemana = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     const diaSemana = diasSemana[dataSelecionada.getDay()];
-    // Filtra médicos da especialidade e unidade
-    const medicosFiltrados = medicos.filter(m =>
-      m.specialty && m.specialty.trim().toLowerCase() === (tipoExameSelecionado || '').trim().toLowerCase() &&
-      m.unit_cnes === unidadeSelecionada.cnes
-    );
+    // Filtra médicos pela unidade e por especialidades que fazem o exame selecionado
+    const examToSpecialties = {
+      "Hemograma": ["Pediatra", "Endocrinologista", "Ginecologista", "Cardiologista"],
+      "Glicemia": ["Endocrinologista", "Pediatra", "Cardiologista"],
+      "Colesterol": ["Cardiologista", "Endocrinologista"],
+      "TSH": ["Endocrinologista", "Pediatra"],
+      "Exame de Urina": ["Urologista", "Ginecologista", "Pediatra"],
+      "Exame de Fezes": ["Pediatra", "Ginecologista"],
+      "Raio-X": ["Pneumologista", "Ortopedista", "Traumatologista"],
+      "Ultrassom": ["Ginecologista", "Obstetrícia", "Urologista", "Ortopedista", "Cardiologista"],
+      "Eletrocardiograma": ["Cardiologista", "Pediatra"],
+      "Tomografia": ["Neurologista", "Ortopedista", "Traumatologista"],
+      "Ressonância": ["Neurologista", "Ortopedista"]
+    };
+    const allowed = examToSpecialties[tipoExameSelecionado] || [];
+    const allowedLower = allowed.map(s => s.toLowerCase());
+    const medicosFiltrados = medicos.filter(m => {
+      if (!m.unit_cnes || !unidadeSelecionada) return false;
+      if (m.unit_cnes !== unidadeSelecionada.cnes) return false;
+      if (!m.specialty) return allowedLower.length === 0; // if doctor has no specialty, include only when no mapping
+      const medSpec = m.specialty.trim().toLowerCase();
+      // If we have an explicit mapping for this exam, only include matching specialties.
+      if (allowedLower.length > 0) return allowedLower.includes(medSpec);
+      // Otherwise, fallback to matching exam string vs specialty (rare)
+      return medSpec === (tipoExameSelecionado || '').trim().toLowerCase();
+    });
     // Junta todos horários disponíveis dos médicos para aquele dia
     let horarios = [];
     medicosFiltrados.forEach(m => {
