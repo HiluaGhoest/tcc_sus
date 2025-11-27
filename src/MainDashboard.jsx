@@ -55,6 +55,63 @@ export default function MainDashboard() {
       });
     }
   };
+  
+  // Função para cancelar exame
+  const handleCancelExame = async (exame, idx) => {
+    if (!clienteData || !profile) return;
+    const result = await Swal.fire({
+      title: 'Confirmação',
+      text: 'Tem certeza que deseja cancelar este exame?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, cancelar',
+      cancelButtonText: 'Não',
+    });
+    if (!result.isConfirmed) return;
+
+    try {
+      // Remove do usuário
+      const novasExames = clienteData.exames_marcados.filter((_, i) => i !== idx);
+      await supabase
+        .from('logistica_cliente')
+        .update({ exames_marcados: novasExames })
+        .eq('cliente_cpf', profile.cpf);
+
+      // Tenta remover do médico (se informado)
+      if (exame.medico_id) {
+        try {
+          const { data: medicoData, error: medicoError } = await supabase
+            .from('logistica_medico')
+            .select('consultas_marcadas')
+            .eq('id', exame.medico_id)
+            .single();
+          if (!medicoError && medicoData && Array.isArray(medicoData.consultas_marcadas)) {
+            const novasConsultasMedico = medicoData.consultas_marcadas.filter(c => {
+              // keep entries that are NOT the one for this paciente/exame
+              const samePaciente = c.paciente_id && profile && c.paciente_id === profile.id;
+              const sameData = (c.data === exame.data) || (c.data === exame.data_hora) || (c.data_hora === exame.data_hora) || (c.horario === exame.horario);
+              return !(samePaciente && sameData);
+            });
+            await supabase
+              .from('logistica_medico')
+              .update({ consultas_marcadas: novasConsultasMedico })
+              .eq('id', exame.medico_id);
+          }
+        } catch (err) {
+          console.error('Erro removendo exame do médico', err);
+        }
+      }
+
+      // Atualiza estado local
+      setClienteData(prev => ({ ...prev, exames_marcados: novasExames }));
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao cancelar exame',
+        text: 'Tente novamente.'
+      });
+    }
+  };
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -296,11 +353,27 @@ export default function MainDashboard() {
               <div className="p-6 space-y-3">
                 {clienteData && Array.isArray(clienteData.exames_marcados) && clienteData.exames_marcados.length > 0 ? (
                   clienteData.exames_marcados.map((exame, idx) => (
-                    <div key={idx} className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <div>
-                        <p className="font-medium text-gray-800">{exame.nome_exame || 'Exame'}</p>
-                        <p className="text-gray-500 text-sm">{exame.data_hora || ''}</p>
+                    <div key={idx} className="flex items-center justify-between w-full">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                        <div>
+                          <p className="font-medium text-gray-800">{exame.nome_exame || 'Exame'}</p>
+                          <p className="text-gray-500 text-sm">{exame.data_hora || exame.data || ''}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => navigate('/reagendar-exame', { state: { exame, idx } })}
+                          className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-sm hover:bg-blue-200 transition-colors"
+                        >
+                          Reagendar
+                        </button>
+                        <button
+                          onClick={() => handleCancelExame(exame, idx)}
+                          className="px-3 py-1 rounded bg-red-100 text-red-700 font-semibold text-sm hover:bg-red-200 transition-colors"
+                        >
+                          Cancelar Exame
+                        </button>
                       </div>
                     </div>
                   ))
