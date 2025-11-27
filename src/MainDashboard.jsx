@@ -164,6 +164,35 @@ export default function MainDashboard() {
       setLoading(false);
     };
     getProfileAndCliente();
+
+    // listen for changes triggered elsewhere (reagendamentos)
+    const onClienteChanged = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('cpf')
+          .eq('id', user.id)
+          .single();
+        if (profileData?.cpf) {
+          const { data: cliente, error: clienteError } = await supabase
+            .from('logistica_cliente')
+            .select('*')
+            .eq('cliente_cpf', profileData.cpf)
+            .single();
+          if (!clienteError && cliente) setClienteData(cliente);
+        }
+      } catch (err) {
+        console.error('Erro atualizando cliente após mudança', err);
+      }
+    };
+    window.addEventListener('clienteDataChanged', onClienteChanged);
+
+    return () => {
+      getProfileAndCliente.cancel?.();
+      window.removeEventListener('clienteDataChanged', onClienteChanged);
+    };
   }, []);
 
   const handleLogout = async () => {

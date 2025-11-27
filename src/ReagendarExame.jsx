@@ -196,29 +196,36 @@ export default function ReagendarExame() {
         .single();
       if (clienteError || !cliente) throw new Error('Registro do cliente não encontrado');
 
-      // update cliente consultas_marcadas
-      const novasConsultas = Array.isArray(cliente.consultas_marcadas) ? [...cliente.consultas_marcadas] : [];
-      const updatedConsulta = { 
+      // update cliente exames_marcados (exams list)
+      const novosExames = Array.isArray(cliente.exames_marcados) ? [...cliente.exames_marcados] : [];
+      const updatedExame = {
         ...exame,
         data: newDate,
         horario: newTime,
+        data_hora: newDate && newTime ? `${newDate} ${newTime}` : (exame.data_hora || `${newDate} ${newTime}`),
         reagendada: true,
         motivo_reagendamento: motivo,
         medico: selectedMedico?.nome || exame?.medico || null,
         medico_id: selectedMedico?.id || exame?.medico_id || null,
       };
-      if (typeof idx === 'number' && idx >= 0 && idx < novasConsultas.length) {
-        novasConsultas[idx] = updatedConsulta;
+
+      if (typeof idx === 'number' && idx >= 0 && idx < novosExames.length) {
+        novosExames[idx] = updatedExame;
       } else {
-        // fallback: try to find matching exame and replace
-        const foundIndex = novasConsultas.findIndex(c => c.data === exame.data && c.horario === exame.horario && c.medico === exame.medico);
-        if (foundIndex !== -1) novasConsultas[foundIndex] = updatedConsulta;
-        else novasConsultas.push(updatedConsulta);
+        // try to find matching exam by common fields
+        const foundIndex = novosExames.findIndex(c => {
+          if (!c) return false;
+          const matchByName = exame.nome_exame && c.nome_exame === exame.nome_exame;
+          const matchByDateTime = (c.data_hora && exame.data_hora && c.data_hora === exame.data_hora) || (c.data === exame.data && c.horario === exame.horario);
+          return matchByName && matchByDateTime;
+        });
+        if (foundIndex !== -1) novosExames[foundIndex] = updatedExame;
+        else novosExames.push(updatedExame);
       }
 
       await supabase
         .from('logistica_cliente')
-        .update({ consultas_marcadas: novasConsultas })
+        .update({ exames_marcados: novosExames })
         .eq('cliente_cpf', profileData.cpf);
 
       // update medico schedule: remove old slot from previous medico (if any)
@@ -270,6 +277,10 @@ export default function ReagendarExame() {
         }
       }
 
+      // notify other parts of the app to refresh client data
+      try {
+        window.dispatchEvent(new CustomEvent('clienteDataChanged'));
+      } catch {}
       setLoading(false);
       // navigate back to dashboard
       navigate(-1);
