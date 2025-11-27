@@ -6,9 +6,9 @@ import logo from './assets/logo.png';
 
 // Unidades agora serão buscadas da API CNES
 
-export default function AgendarConsulta() {
-  // Função para salvar consulta marcada
-  async function salvarConsulta() {
+export default function AgendarExame() {
+  // Função para salvar exame agendado
+  async function salvarExame() {
     // Obter id do usuário autenticado via Supabase Auth
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData || !userData.user || !userData.user.id) {
@@ -16,71 +16,41 @@ export default function AgendarConsulta() {
       return;
     }
     const uuid = userData.user.id;
-    // Montar objeto da consulta
-    const novaConsulta = {
-      data: dataSelecionadaFormatada,
-      horario: horarioSelecionado,
+    // Montar objeto do exame
+    const novoExame = {
+      nome_exame: tipoExameSelecionado,
+      data_hora: `${dataSelecionadaFormatada}${horarioSelecionado ? ' - ' + horarioSelecionado : ''}`,
       unidade: unidadeSelecionada ? unidadeSelecionada.nome : null,
-      unidade_cnes: unidadeSelecionada ? unidadeSelecionada.cnes : null,
-      medico: medicoSelecionado ? medicoSelecionado.nome : null,
-      medico_id: medicoSelecionado ? medicoSelecionado.id : null,
-      tipo: tipoConsultaSelecionado
+      unidade_cnes: unidadeSelecionada ? unidadeSelecionada.cnes : null
     };
-    // Buscar registro do cliente
+    // Buscar registro do cliente (exames)
     const { data, error } = await supabase
       .from('logistica_cliente')
-      .select('consultas_marcadas')
+      .select('exames_marcados')
       .eq('id', uuid)
       .single();
     if (error) {
       Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao buscar dados do usuário.' });
       return;
     }
-    let consultas = [];
-    if (data && data.consultas_marcadas) {
+    let exames = [];
+    if (data && data.exames_marcados) {
       try {
-        consultas = Array.isArray(data.consultas_marcadas) ? data.consultas_marcadas : JSON.parse(data.consultas_marcadas);
+        exames = Array.isArray(data.exames_marcados) ? data.exames_marcados : JSON.parse(data.exames_marcados);
       } catch {
-        consultas = [];
+        exames = [];
       }
     }
-    consultas.push(novaConsulta);
-    // Atualizar registro
+    exames.push(novoExame);
+    // Atualizar registro com exames
     const { error: updateError } = await supabase
       .from('logistica_cliente')
-      .update({ consultas_marcadas: consultas })
+      .update({ exames_marcados: exames })
       .eq('id', uuid);
     if (updateError) {
-      Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao salvar consulta.' });
+      Swal.fire({ icon: 'error', title: 'Erro', text: 'Erro ao salvar exame.' });
     } else {
-      // Atualizar consultas_marcadas do médico
-      if (medicoSelecionado && medicoSelecionado.id) {
-        // Buscar consultas já marcadas do médico
-        const { data: medicoData, error: medicoError } = await supabase
-          .from('logistica_medico')
-          .select('consultas_marcadas')
-          .eq('id', medicoSelecionado.id)
-          .single();
-        let consultasMedico = [];
-        if (medicoData && medicoData.consultas_marcadas) {
-          try {
-            consultasMedico = Array.isArray(medicoData.consultas_marcadas) ? medicoData.consultas_marcadas : JSON.parse(medicoData.consultas_marcadas);
-          } catch {
-            consultasMedico = [];
-          }
-        }
-        consultasMedico.push({
-          data: dataSelecionadaFormatada,
-          horario: horarioSelecionado,
-          paciente_id: uuid,
-          unidade: unidadeSelecionada ? unidadeSelecionada.nome : null
-        });
-        await supabase
-          .from('logistica_medico')
-          .update({ consultas_marcadas: consultasMedico })
-          .eq('id', medicoSelecionado.id);
-      }
-      Swal.fire({ icon: 'success', title: 'Agendado', text: 'Consulta agendada com sucesso!' });
+      Swal.fire({ icon: 'success', title: 'Agendado', text: 'Exame agendado com sucesso!' });
       navigate('/');
     }
   }
@@ -192,24 +162,18 @@ export default function AgendarConsulta() {
   }, [userLocation, unidades]);
   const today = new Date();
   const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-  const tiposConsulta = [
-    "Cardiologista",
-    "Reumatologista",
-    "Ginecologista",
-    "Pediatra",
-    "Otorinolaringologista",
-    "Dentista",
-    "Pneumologista",
-    "Dermatologista",
-    "Neurologista",
-    "Psiquiatra",
-    "Obstetrícia",
-    "Ortopedista",
-    "Traumatologista",
-    "Endocrinologista",
-    "Urologista",
-    "Anestesista",
-    "Oftalmologista"
+  const tiposExame = [
+    "Hemograma",
+    "Glicemia",
+    "Colesterol",
+    "TSH",
+    "Exame de Urina",
+    "Exame de Fezes",
+    "Raio-X",
+    "Ultrassom",
+    "Eletrocardiograma",
+    "Tomografia",
+    "Ressonância"
   ];
   // Função para encontrar a primeira data válida após uma semana
   const getFirstValidDate = () => {
@@ -263,7 +227,7 @@ export default function AgendarConsulta() {
     }
     fetchMedicos();
   }, [unidadeSelecionada]);
-  const [tipoConsultaSelecionado, setTipoConsultaSelecionado] = useState(tiposConsulta[0]);
+  const [tipoExameSelecionado, setTipoExameSelecionado] = useState(tiposExame[0]);
   const [medicos, setMedicos] = useState([]);
   const [medicoSelecionado, setMedicoSelecionado] = useState(null);
 
@@ -290,7 +254,7 @@ export default function AgendarConsulta() {
     const diaSemana = diasSemana[dataSelecionada.getDay()];
     // Filtra médicos da especialidade e unidade
     const medicosFiltrados = medicos.filter(m =>
-      m.specialty && m.specialty.trim().toLowerCase() === tipoConsultaSelecionado.trim().toLowerCase() &&
+      m.specialty && m.specialty.trim().toLowerCase() === (tipoExameSelecionado || '').trim().toLowerCase() &&
       m.unit_cnes === unidadeSelecionada.cnes
     );
     // Junta todos horários disponíveis dos médicos para aquele dia
@@ -351,8 +315,8 @@ export default function AgendarConsulta() {
       </header>
       <main className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-2 mt-8">Agendar Consulta</h2>
-          <p className="text-gray-500 text-center mb-8">Escolha a data, médico e unidade para seu atendimento</p>
+          <h2 className="text-2xl font-bold text-center mb-2 mt-8">Agendar Exame</h2>
+          <p className="text-gray-500 text-center mb-8">Escolha a data, exame e unidade para seu atendimento</p>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Bloco da esquerda: Data e Médico */}
@@ -516,16 +480,16 @@ export default function AgendarConsulta() {
               {/* Bloco da direita: Unidades e Tipo de Consulta */}
               
               <div>
-                {/* Tipo de Consulta */}
+                {/* Tipo de Exame */}
                 <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  <span className="text-blue-600">🩺</span> <span>Tipo de Consulta</span>
+                  <span className="text-blue-600">🧪</span> <span>Tipo de Exame</span>
                 </h3>
                 <select
                   className="mb-4 w-full p-2 border rounded-lg bg-gray-100 text-gray-700 font-medium "
-                  value={tipoConsultaSelecionado}
-                  onChange={e => setTipoConsultaSelecionado(e.target.value)}
+                  value={tipoExameSelecionado}
+                  onChange={e => setTipoExameSelecionado(e.target.value)}
                 >
-                  {tiposConsulta.map(tipo => (
+                  {tiposExame.map(tipo => (
                     <option key={tipo} value={tipo}>{tipo}</option>
                   ))}
                 </select>
@@ -587,8 +551,8 @@ export default function AgendarConsulta() {
                   <div className="font-medium text-gray-700">{unidadeSelecionada ? unidadeSelecionada.nome : "-"}</div>
                   <div className="text-gray-500">Médico:</div>
                   <div className="font-medium text-gray-700">{medicoSelecionado ? medicoSelecionado.nome : "-"}</div>
-                  <div className="text-gray-500">Serviço:</div>
-                  <div className="font-medium text-gray-700">{tipoConsultaSelecionado}</div>
+                  <div className="text-gray-500">Exame:</div>
+                  <div className="font-medium text-gray-700">{tipoExameSelecionado}</div>
                 </div>
             </div>
             {/* Botões */}
@@ -601,7 +565,7 @@ export default function AgendarConsulta() {
               </button>
               <button
                 className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium border border-blue-600 shadow hover:bg-blue-700 transition"
-                onClick={salvarConsulta}
+                onClick={salvarExame}
               >
                 Confirmar Agendamento
               </button>
